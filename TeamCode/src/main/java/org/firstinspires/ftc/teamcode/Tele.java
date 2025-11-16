@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 @TeleOp(name = "Tele")
 public class Tele extends LinearOpMode {
-
     private DcMotor BackRight;
     private DcMotor FrontRight;
     private DcMotor FrontLeft;
@@ -113,7 +112,11 @@ public class Tele extends LinearOpMode {
 
             // Color Sensor for Presence of Ball Close to the Shooting Flywheel
             String ballColor = getColorSensor();
-            ballDetected = ballColor.equals("PURPLE") || ballColor.equals("GREEN");
+            if (ballColor.equals("PURPLE") || ballColor.equals("GREEN")) {
+                ballDetected = true;
+            } else {
+                ballDetected = false;
+            }
 
 
             // Send telemetry messages to explain controls and show robot status
