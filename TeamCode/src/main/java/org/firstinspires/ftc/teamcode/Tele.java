@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import android.graphics.Color;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
@@ -16,6 +17,7 @@ public class Tele extends LinearOpMode {
     private DcMotor BackLeft;
     private DcMotor intakeMotor, outtakeMotor;
     private CRServo s0, s1, s2, s3, TopServo;
+    private Servo GateServo;
     private NormalizedColorSensor colorSensor;
     final float[] hsvValues = new float[3];
 
@@ -46,6 +48,7 @@ public class Tele extends LinearOpMode {
         s2 = hardwareMap.get(CRServo.class, "s2");
         s3 = hardwareMap.get(CRServo.class, "s3");
         TopServo = hardwareMap.get(CRServo.class, "TopServo");
+        GateServo = hardwareMap.get(Servo.class, "GateServo");
 
         intakeMotor = hardwareMap.get(DcMotor.class, "m1");
         outtakeMotor = hardwareMap.get(DcMotor.class, "m2");
@@ -58,11 +61,11 @@ public class Tele extends LinearOpMode {
         telemetry.addData(">", "Hardware Initialized");
         telemetry.update();
 
-
         waitForStart();
         while (opModeIsActive()) {
             // Variables that continuously change
-            double forward, right, rotate, intakeP, outtakeP, transportP;
+            double forward, right, rotate, intakeP;
+
             boolean ballDetected = false;
 
             forward = -gamepad1.left_stick_y;
@@ -80,7 +83,7 @@ public class Tele extends LinearOpMode {
             // Set MaxSpeed based on mode
             double MaxSpeed;
             if (slowMode) {
-                MaxSpeed = 0.4;
+                MaxSpeed = 0.3;
             } else {
                 MaxSpeed = 0.6;
             }
@@ -88,26 +91,64 @@ public class Tele extends LinearOpMode {
             MecanumDrive(forward, right, rotate, MaxSpeed);
 
             // Intake, Outtake, and Transport
+
+            // set intake motor based on left trigger
             intakeP = gamepad2.left_trigger;
-            outtakeP = gamepad2.right_trigger;
-            transportP = gamepad2.a ? 0.3 : 0.0;
-
             intakePower(intakeP);
-            transportPower(transportP);
 
-            if (transportP > 0.1 && outtakeP < 0.1) { // during transport phase
-                outtakePower(-0.4); // prevent balls from getting ahead of the flywheel
-            } else { // during outtake phase
-                // change power if needed
-                outtakePower(0.6 * outtakeP);
-            }
-
-
-            //reverse transport direction to put balls back in place
+            // --- OUTTAKE + TRANSPORT LOGIC ---
+            // PRIORITY 1 — REVERSE EVERYTHING
             if (gamepad2.left_bumper) {
                 outtakePower(-0.6);
-                transportPower(-0.3);
-                intakePower(0.7); // prevent balls from slipping out
+                transportPower(-1.0);
+                intakePower(0.7);
+            }
+            else if (gamepad2.left_trigger > 0.1 && gamepad2.right_trigger > 0.1) {
+                // BOTH TRIGGERS → shoot AND intake
+                // Flywheel ON
+                outtakePower(0.5);
+
+                // Feed balls in
+                transportPower(1.0);
+
+                // Intake running to bring next ball up
+                intakePower(gamepad2.left_trigger);
+            }
+            else if (gamepad2.right_trigger > 0.1) {
+                // ONLY FLYWHEEL SPIN-UP
+                outtakePower(0.5);
+
+                // NO FEEDING unless A or intake pressed
+                transportPower(0);
+                intakePower(0);
+            }
+            else if (gamepad2.left_trigger > 0.1) {
+                // ONLY INTAKE
+                intakePower(gamepad2.left_trigger);
+                // Transport moves ball up
+                transportPower(0.4);
+                // outtakePower(-0.1);
+            }
+            else if (gamepad2.a) {
+                // MANUAL FEED
+                transportPower(1.0);
+                // If flywheel is spinning, keep power
+                if (outtakeMotor.getPower() > 0.1) {
+                    outtakePower(outtakeMotor.getPower());
+                }
+            }
+            else {
+                // NOTHING PRESSED
+                intakePower(0);
+                transportPower(0);
+                outtakePower(0);
+            }
+
+            // Prevents balls from entering the shooter
+            if (gamepad2.b) {
+                GateServo.setPosition(1.0); // open
+            } else if (gamepad2.y) {
+                GateServo.setPosition(0.0); // closed
             }
 
             // Color Sensor for Presence of Ball Close to the Shooting Flywheel
@@ -124,12 +165,9 @@ public class Tele extends LinearOpMode {
             telemetry.addData("Strafe Power", "%.2f", right);
             telemetry.addData("Turn Power",  "%.2f", rotate);
             telemetry.addLine();
-            telemetry.addData("Max Drive Speed", "%.2f", MaxSpeed);
-            telemetry.addLine();
-            telemetry.addData("Intake Power",  "%.2f", intakeP);
-            telemetry.addData("Transport Power",  "%.2f", transportP);
-            telemetry.addData("Outtake Power",  "%.2f", outtakeP);
-            telemetry.addLine();
+            telemetry.addData("Intake Trigger",  "%.2f", intakeP);
+            telemetry.addData("Transport Power (s0)", "%.2f", s0.getPower());
+            telemetry.addData("Outtake Motor Power", "%.2f", outtakeMotor.getPower());
             telemetry.addData("Ball Detected", ballDetected);
             telemetry.addData("Color Sensor", ballColor);
             telemetry.update();
