@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -113,6 +113,9 @@ public class Tele extends LinearOpMode {
 
                 // Intake running to bring next ball up
                 intakePower(gamepad2.left_trigger);
+
+                // Open Gate to let balls go through
+                GateServo.setPosition(0.5);
             }
             else if (gamepad2.right_trigger > 0.1) {
                 // ONLY FLYWHEEL SPIN-UP
@@ -146,9 +149,9 @@ public class Tele extends LinearOpMode {
 
             // Prevents balls from entering the shooter
             if (gamepad2.b) {
-                GateServo.setPosition(1.0); // open
+                GateServo.setPosition(-1.0); // close
             } else if (gamepad2.y) {
-                GateServo.setPosition(0.0); // closed
+                GateServo.setPosition(0.5); // open
             }
 
             // Color Sensor for Presence of Ball Close to the Shooting Flywheel
