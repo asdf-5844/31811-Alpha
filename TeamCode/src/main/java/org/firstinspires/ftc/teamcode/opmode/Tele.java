@@ -120,12 +120,13 @@ public class Tele extends LinearOpMode {
             else if (gamepad2.left_trigger > 0.1) {
                 rgb.setPosition(0.611); // BLUE
 
-                // ONLY INTAKE
+                //INTAKE
                 intakePower(gamepad2.left_trigger);
 
                 // Transport moves ball up
                 transportPower(0.3);
 
+                // Close gate
                 GateServo.setPosition(GateClose);
             }
             else if (gamepad2.a) {
