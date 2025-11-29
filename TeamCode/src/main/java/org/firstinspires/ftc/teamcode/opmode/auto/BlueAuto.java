@@ -34,7 +34,7 @@ public class BlueAuto extends LinearOpMode {
 
         if (opModeIsActive()) {
             GateServo.setPosition(GateClose);
-            drive.goForward(-500);
+            drive.goForward(-700);
 
             // First shooting cycle, 2 sec spinup
             shootSequence(2000, 4000);
@@ -53,7 +53,7 @@ public class BlueAuto extends LinearOpMode {
             drive.goForward(-1000);
             drive.strafeLeft(-1300);
             drive.turnLeft(-450);
-            drive.goForward(300);
+            drive.goForward(200);
 
             // Second shooting cycle, 2.5 sec spinup
             shootSequence(2500, 4000);
