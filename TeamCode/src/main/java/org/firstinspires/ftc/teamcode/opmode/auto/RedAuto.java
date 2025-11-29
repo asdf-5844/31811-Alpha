@@ -32,8 +32,34 @@ public class RedAuto extends LinearOpMode {
 
         waitForStart();
         if (opModeIsActive()) {
-            drive.goForward(1000);
-            drive.strafeLeft(-800);
+            GateServo.setPosition(GateClose);
+            drive.goForward(-700);
+
+            // First shooting cycle, 2 sec spinup
+            shootSequence(2000, 4000);
+
+            drive.turnLeft(-450);
+            drive.goForward(-400);
+            drive.strafeLeft(-1400);
+
+            // Start Intake and Transport
+            intakeSequence(1.0, 0.4, 50);
+
+            drive.moveTo(1500, 1400, 1400, 1400, 0.4, 2.8); // Custom speed
+            intake.stop();
+            transport.stop();
+
+            drive.goForward(-1000);
+            drive.strafeLeft(1300);
+            drive.turnLeft(450);
+            drive.goForward(200);
+
+            // Second shooting cycle, 2.5 sec spinup
+            shootSequence(2500, 4000);
+
+            // Get out of launch zone
+            drive.goForward(-1000);
+            drive.strafeLeft(-1000);
         }
     }
     private void shootSequence(long spinUpTime, long feedTime) {
