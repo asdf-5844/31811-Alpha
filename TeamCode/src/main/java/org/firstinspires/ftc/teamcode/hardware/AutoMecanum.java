@@ -40,7 +40,12 @@ public class AutoMecanum {
         BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void moveTo(int bl, int br, int fl, int fr, double power) {
+    public void moveTo(int bl, int br, int fl, int fr, double power, double timeoutSeconds) {
+
+        BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         BackLeft.setTargetPosition(bl);
         BackRight.setTargetPosition(br);
@@ -57,7 +62,10 @@ public class AutoMecanum {
         FrontLeft.setPower(power);
         FrontRight.setPower(power);
 
+        double start = opMode.getRuntime();
+
         while (opMode.opModeIsActive() &&
+                (opMode.getRuntime() - start < timeoutSeconds) &&
                 (BackLeft.isBusy() || BackRight.isBusy() ||
                         FrontLeft.isBusy() || FrontRight.isBusy())) {
             opMode.idle();
@@ -70,14 +78,15 @@ public class AutoMecanum {
     }
 
     public void goForward(int ticks) {
-        moveTo(ticks, ticks, ticks, ticks, 0.4);
+        moveTo(ticks, ticks, ticks, ticks, 0.8, 1.0);
     }
 
-    public void turnRight(int ticks) {
-        moveTo(ticks, -ticks, ticks, -ticks, 0.4);
+    public void turnLeft(int ticks) {
+        moveTo(-ticks, ticks, -ticks, ticks, 0.8, 1.0);
     }
 
     public void strafeLeft(int ticks) {
-        moveTo(ticks, -ticks, -ticks, ticks, 0.4);
+        moveTo(ticks, -ticks, -ticks, ticks, 0.8, 1.2);
     }
+
 }

@@ -1,16 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import android.graphics.Color;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
 
-@TeleOp(name = "Tele")
+@TeleOp(name = "DecodeTeleOp")
 public class Tele extends LinearOpMode {
+
     private DcMotor BackRight;
     private DcMotor FrontRight;
     private DcMotor FrontLeft;
@@ -18,8 +16,7 @@ public class Tele extends LinearOpMode {
     private DcMotor intakeMotor, outtakeMotor;
     private CRServo s0, s1, s2, s3, TopServo;
     private Servo GateServo;
-    private NormalizedColorSensor colorSensor;
-    final float[] hsvValues = new float[3];
+    private Servo rgb;
 
     @Override
     public void runOpMode() {
@@ -41,6 +38,11 @@ public class Tele extends LinearOpMode {
 
         boolean slowMode = false;
         boolean xWasPressed = false;
+        double GateOpen = 1.0;
+        double GateClose = 0.7;
+
+        // RGB indicator light
+        rgb = hardwareMap.get(Servo.class, "rgb");
 
         // Define and initialize ALL installed servos.
         s0 = hardwareMap.get(CRServo.class, "s0");
@@ -53,20 +55,15 @@ public class Tele extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "m1");
         outtakeMotor = hardwareMap.get(DcMotor.class, "m2");
 
-        // Get a reference to our sensor object. It's recommended to use NormalizedColorSensor over
-        // ColorSensor, because NormalizedColorSensor consistently gives values between 0 and 1, while
-        // the values you get from ColorSensor are dependent on the specific sensor you're using.
-        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "i1");
-
         telemetry.addData(">", "Hardware Initialized");
         telemetry.update();
+
 
         waitForStart();
         while (opModeIsActive()) {
             // Variables that continuously change
-            double forward, right, rotate, intakeP;
+            double forward, right, rotate;
 
-            boolean ballDetected = false;
 
             forward = -gamepad1.left_stick_y;
             right = gamepad1.left_stick_x;
@@ -85,16 +82,10 @@ public class Tele extends LinearOpMode {
             if (slowMode) {
                 MaxSpeed = 0.3;
             } else {
-                MaxSpeed = 0.6;
+                MaxSpeed = 0.7;
             }
 
             MecanumDrive(forward, right, rotate, MaxSpeed);
-
-            // Intake, Outtake, and Transport
-
-            // set intake motor based on left trigger
-            intakeP = gamepad2.left_trigger;
-            intakePower(intakeP);
 
             // --- OUTTAKE + TRANSPORT LOGIC ---
             // PRIORITY 1 — REVERSE EVERYTHING
@@ -105,19 +96,20 @@ public class Tele extends LinearOpMode {
             }
             else if (gamepad2.left_trigger > 0.1 && gamepad2.right_trigger > 0.1) {
                 // BOTH TRIGGERS → shoot AND intake
+                rgb.setPosition(0.5); // GREEN
+
                 // Flywheel ON
                 outtakePower(0.5);
-
+                // Open Gate to let balls go through
+                GateServo.setPosition(GateOpen);
                 // Feed balls in
-                transportPower(1.0);
-
+                transportPower(0.3);
                 // Intake running to bring next ball up
                 intakePower(gamepad2.left_trigger);
-
-                // Open Gate to let balls go through
-                GateServo.setPosition(0.5);
             }
             else if (gamepad2.right_trigger > 0.1) {
+                rgb.setPosition(0.3); // ORANGE
+
                 // ONLY FLYWHEEL SPIN-UP
                 outtakePower(0.5);
 
@@ -126,11 +118,15 @@ public class Tele extends LinearOpMode {
                 intakePower(0);
             }
             else if (gamepad2.left_trigger > 0.1) {
+                rgb.setPosition(0.611); // BLUE
+
                 // ONLY INTAKE
                 intakePower(gamepad2.left_trigger);
+
                 // Transport moves ball up
-                transportPower(0.4);
-                // outtakePower(-0.1);
+                transportPower(0.3);
+
+                GateServo.setPosition(GateClose);
             }
             else if (gamepad2.a) {
                 // MANUAL FEED
@@ -147,43 +143,31 @@ public class Tele extends LinearOpMode {
                 outtakePower(0);
             }
 
-            // Prevents balls from entering the shooter
             if (gamepad2.b) {
-                GateServo.setPosition(-1.0); // close
-            } else if (gamepad2.y) {
-                GateServo.setPosition(0.5); // open
+                GateServo.setPosition(GateOpen);
             }
-
-            // Color Sensor for Presence of Ball Close to the Shooting Flywheel
-            String ballColor = getColorSensor();
-            if (ballColor.equals("PURPLE") || ballColor.equals("GREEN")) {
-                ballDetected = true;
-            } else {
-                ballDetected = false;
+            if (gamepad2.y) {
+                GateServo.setPosition(GateClose);
             }
-
 
             // Send telemetry messages to explain controls and show robot status
             telemetry.addData("Drive Power", "%.2f", forward);
             telemetry.addData("Strafe Power", "%.2f", right);
             telemetry.addData("Turn Power",  "%.2f", rotate);
             telemetry.addLine();
-            telemetry.addData("Intake Trigger",  "%.2f", intakeP);
-            telemetry.addData("Transport Power (s0)", "%.2f", s0.getPower());
+            telemetry.addData("Intake Power",  "%.2f", intakeMotor.getPower());
             telemetry.addData("Outtake Motor Power", "%.2f", outtakeMotor.getPower());
-            telemetry.addData("Ball Detected", ballDetected);
-            telemetry.addData("Color Sensor", ballColor);
+            telemetry.addLine();
+            telemetry.addData("LY", gamepad1.left_stick_y);
+            telemetry.addData("LX", gamepad1.left_stick_x);
+            telemetry.addData("RX", gamepad1.right_stick_x);
             telemetry.update();
-
-            // Pace this loop so hands move at a reasonable speed.
-            sleep(50);
         }
     }
+
     public void MecanumDrive(double forward, double strafe, double rotate, double MaxSpeed) {
 
         // the denominator is the largest motor power (absolute value) or 1
-        // This ensures all the powers maintain the same ratio,
-        // but only if at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(rotate), 1);
 
         double frontLeftPower = (forward + strafe + rotate) / denominator;
@@ -191,7 +175,7 @@ public class Tele extends LinearOpMode {
         double backLeftPower = (forward - strafe + rotate) / denominator;
         double backRightPower = (forward + strafe - rotate) / denominator;
 
-        // Apply MaxSpeed scaling (adjust for outreach / testing)
+        // Apply MaxSpeed scaling
         FrontLeft.setPower(frontLeftPower * MaxSpeed);
         FrontRight.setPower(frontRightPower * MaxSpeed);
         BackLeft.setPower(backLeftPower * MaxSpeed);
@@ -200,10 +184,12 @@ public class Tele extends LinearOpMode {
 
 
     public void intakePower(double mPower) {
+        // you previously inverted this; keep that if intake motor is reversed on robot
         intakeMotor.setPower(-mPower);
     }
 
     public void transportPower(double mPower) {
+        // s2 & s3 are inverted to match physical orientation
         s0.setPower(mPower);
         s1.setPower(mPower);
         s2.setPower(-mPower);
@@ -214,24 +200,4 @@ public class Tele extends LinearOpMode {
     public void outtakePower(double mPower) {
         outtakeMotor.setPower(mPower);
     }
-
-    public String getColorSensor() {
-
-        // Get the normalized colors from the sensor
-        NormalizedRGBA colors = colorSensor.getNormalizedColors();
-
-        // Update the hsvValues array by passing it to Color.colorToHSV()
-        Color.colorToHSV(colors.toColor(), hsvValues);
-
-        int hue = (int) hsvValues[0];
-        if (hue > 220 && hue < 320) {
-            return "PURPLE";
-        } else if (hue > 70 && hue < 170) {
-            return "GREEN";
-        }
-
-        return "Unknown";
-    }
-
-
 }
