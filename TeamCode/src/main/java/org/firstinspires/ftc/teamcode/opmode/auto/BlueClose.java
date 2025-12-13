@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.subsystem.Intake;
 import org.firstinspires.ftc.teamcode.subsystem.Transport;
 import org.firstinspires.ftc.teamcode.subsystem.Outtake;
 
-@Autonomous(name = "RedClose")
-public class RedAuto extends LinearOpMode {
+@Autonomous(name = "BlueClose")
+public class BlueClose extends LinearOpMode {
     private Servo GateServo;
     private final double GateClose = 0.7;
     private final double GateOpen = 1.0;
@@ -31,6 +31,7 @@ public class RedAuto extends LinearOpMode {
         GateServo = hardwareMap.get(Servo.class, "GateServo");
 
         waitForStart();
+
         if (opModeIsActive()) {
             GateServo.setPosition(GateClose);
             drive.goForward(-700);
@@ -38,9 +39,9 @@ public class RedAuto extends LinearOpMode {
             // First shooting cycle, 2 sec spinup
             shootSequence(2000, 4000);
 
-            drive.turnLeft(-450);
+            drive.turnLeft(450);
             drive.goForward(-400);
-            drive.strafeLeft(-1400);
+            drive.strafeLeft(1400);
 
             // Start Intake and Transport
             intakeSequence(1.0, 0.4, 50);
@@ -50,8 +51,8 @@ public class RedAuto extends LinearOpMode {
             transport.stop();
 
             drive.goForward(-1000);
-            drive.strafeLeft(1300);
-            drive.turnLeft(450);
+            drive.strafeLeft(-1300);
+            drive.turnLeft(-450);
             drive.goForward(200);
 
             // Second shooting cycle, 2.5 sec spinup
@@ -59,9 +60,10 @@ public class RedAuto extends LinearOpMode {
 
             // Get out of launch zone
             drive.goForward(-1000);
-            drive.strafeLeft(-1000);
+            drive.strafeLeft(1000);
         }
     }
+
     private void shootSequence(long spinUpTime, long feedTime) {
         outtake.shoot();
         sleep(spinUpTime);
