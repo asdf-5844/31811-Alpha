@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class FlywheelTuner extends OpMode{
     public DcMotorEx flywheelMotor;
 
-    public double highVelocity = 3000;
-    public double lowVelocity = 1500;
+    public double highVelocity = 1500;
+    public double lowVelocity = 900;
 
     double curTargetVelocity = highVelocity;
 
@@ -31,7 +31,7 @@ public class FlywheelTuner extends OpMode{
 
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P, 0, 0, F);
         flywheelMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        telemetry.addData(">", "Init complete");
+        telemetry.addLine("Init Complete");
 
     }
 

@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 
-@TeleOp(name = "Tele")
-public class Tele extends LinearOpMode {
+@Disabled
+@TeleOp(name = "SoloDrive")
+public class SoloDrive extends LinearOpMode {
 
     private DcMotor BackRight;
     private DcMotor FrontRight;
@@ -102,12 +104,12 @@ public class Tele extends LinearOpMode {
 
             // --- OUTTAKE + TRANSPORT LOGIC ---
             // PRIORITY 1 — REVERSE EVERYTHING
-            if (gamepad2.left_bumper) {
+            if (gamepad1.left_bumper) {
                 outtakePower(-0.6);
                 transportPower(-1.0);
                 intakePower(0.7);
             }
-            else if (gamepad2.left_trigger > 0.1 && gamepad2.right_trigger > 0.1) {
+            else if (gamepad1.left_trigger > 0.1 && gamepad1.right_trigger > 0.1) {
                 // BOTH TRIGGERS → shoot AND intake
                 rgb.setPosition(0.5); // GREEN
 
@@ -118,9 +120,9 @@ public class Tele extends LinearOpMode {
                 // Feed balls in
                 transportPower(0.3);
                 // Intake running to bring next ball up
-                intakePower(gamepad2.left_trigger);
+                intakePower(gamepad1.left_trigger);
             }
-            else if (gamepad2.right_trigger > 0.1) {
+            else if (gamepad1.right_trigger > 0.1) {
                 rgb.setPosition(0.3); // ORANGE
 
                 // ONLY FLYWHEEL SPIN-UP
@@ -130,11 +132,11 @@ public class Tele extends LinearOpMode {
                 transportPower(0);
                 intakePower(0);
             }
-            else if (gamepad2.left_trigger > 0.1) {
+            else if (gamepad1.left_trigger > 0.1) {
                 rgb.setPosition(0.611); // BLUE
 
                 //INTAKE
-                intakePower(gamepad2.left_trigger);
+                intakePower(gamepad1.left_trigger);
 
                 // Transport moves ball up
                 transportPower(0.3);
@@ -142,7 +144,7 @@ public class Tele extends LinearOpMode {
                 // Close gate
                 GateServo.setPosition(GateClose);
             }
-            else if (gamepad2.a) {
+            else if (gamepad1.a) {
                 // MANUAL FEED
                 transportPower(1.0);
                 // If flywheel is spinning, keep power
@@ -157,10 +159,10 @@ public class Tele extends LinearOpMode {
                 outtakePower(0);
             }
 
-            if (gamepad2.b) {
+            if (gamepad1.b) {
                 GateServo.setPosition(GateOpen);
             }
-            if (gamepad2.y) {
+            if (gamepad1.y) {
                 GateServo.setPosition(GateClose);
             }
 
