@@ -39,8 +39,7 @@ public class Tele extends LinearOpMode {
         boolean slowMode = false;
         boolean xWasPressed = false;
 
-        double flyWheelPower = 0.5;
-        boolean aWasPressed = false;
+        double flyWheelPower;
 
         double GateOpen = 1.0;
         double GateClose = 0.7;
@@ -81,15 +80,14 @@ public class Tele extends LinearOpMode {
                 xWasPressed = false;  // reset when button released
             }
 
-            if (gamepad1.a && !aWasPressed) {
-                flyWheelPower = 0.7;
-            } else if (!gamepad1.a) {
-                flyWheelPower = 0.5;
+            if (gamepad1.a) {
+                flyWheelPower = 0.7; // medium shot
+            } else if (gamepad1.b) {
+                flyWheelPower = 0.8; // far shot
+            } else {
+                flyWheelPower = 0.5; // default/close
             }
 
-            if (gamepad1.b) {
-                flyWheelPower = 0.8;
-            }
             // Set MaxSpeed based on mode
             double MaxSpeed;
             if (slowMode) {
