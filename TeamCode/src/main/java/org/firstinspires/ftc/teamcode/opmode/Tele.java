@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 
-@TeleOp(name = "DecodeTeleOp")
+@TeleOp(name = "Tele")
 public class Tele extends LinearOpMode {
 
     private DcMotor BackRight;
