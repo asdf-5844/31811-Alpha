@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 
+// import motor configuration type for PIDF
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+
 @TeleOp(name = "Tele")
 public class Tele extends LinearOpMode {
 
@@ -56,7 +59,12 @@ public class Tele extends LinearOpMode {
         GateServo = hardwareMap.get(Servo.class, "GateServo");
 
         intakeMotor = hardwareMap.get(DcMotor.class, "m1");
+
         outtakeMotor = hardwareMap.get(DcMotor.class, "m2");
+        MotorConfigurationType motorConfigurationType = outtakeMotor.getMotorType().clone();
+        motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+        outtakeMotor.setMotorType(motorConfigurationType);
+        outtakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData(">", "Hardware Initialized");
         telemetry.update();
@@ -85,7 +93,7 @@ public class Tele extends LinearOpMode {
             } else if (gamepad1.b) {
                 flyWheelPower = 0.8; // far shot
             } else {
-                flyWheelPower = 0.5; // default/close
+                flyWheelPower = 0.33; // default/close
             }
 
             // Set MaxSpeed based on mode
@@ -93,7 +101,7 @@ public class Tele extends LinearOpMode {
             if (slowMode) {
                 MaxSpeed = 0.3;
             } else {
-                MaxSpeed = 1.0;
+                MaxSpeed = 0.8;
             }
 
             MecanumDrive(forward, right, rotate, MaxSpeed);
@@ -110,7 +118,7 @@ public class Tele extends LinearOpMode {
                 rgb.setPosition(0.5); // GREEN
 
                 // Flywheel ON
-                outtakePower(0.5);
+                outtakePower(flyWheelPower);
                 // Open Gate to let balls go through
                 GateServo.setPosition(GateOpen);
                 // Feed balls in
