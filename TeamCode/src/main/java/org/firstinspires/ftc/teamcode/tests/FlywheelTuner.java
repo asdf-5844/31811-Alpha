@@ -21,7 +21,7 @@ public class FlywheelTuner extends OpMode{
 
     double[] stepSizes = {10.0, 1.0, 0.1, 0.001, 0.0001};
 
-    int stepIndex = 1; // change at stepSizes [1]
+    int stepIndex = 1; // change at by 1
 
     @Override
     public void init() {
@@ -41,6 +41,7 @@ public class FlywheelTuner extends OpMode{
         // set target velocity
         // update telemetry
 
+        // Press Y to switch between high/low speed
         if (gamepad1.yWasPressed()) {
             if (curTargetVelocity == highVelocity) {
                 curTargetVelocity = lowVelocity;
@@ -48,10 +49,13 @@ public class FlywheelTuner extends OpMode{
                 curTargetVelocity = highVelocity;
             }
         }
+
+        // Press B to change step sizes
         if (gamepad1.bWasPressed()) {
             stepIndex = (stepIndex + 1) % stepSizes.length;
         }
 
+        // Adjust F
         if (gamepad1.dpadLeftWasPressed()) {
             F += stepSizes[stepIndex];
 
@@ -60,6 +64,7 @@ public class FlywheelTuner extends OpMode{
             F -= stepSizes[stepIndex];
         }
 
+        // Adjust P
         if (gamepad1.dpadDownWasPressed()) {
             P += stepSizes[stepIndex];
         }
@@ -75,6 +80,7 @@ public class FlywheelTuner extends OpMode{
         flywheelMotor.setVelocity(curTargetVelocity);
 
         double curVelocity = flywheelMotor.getVelocity();
+        // error
         double error = curTargetVelocity - curVelocity;
 
         telemetry.addData("Target Velocity", curTargetVelocity);
