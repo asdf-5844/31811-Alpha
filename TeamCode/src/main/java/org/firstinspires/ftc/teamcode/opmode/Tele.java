@@ -45,7 +45,7 @@ public class Tele extends LinearOpMode {
         boolean slowMode = false;
         boolean xWasPressed = false;
 
-        double flyWheelVelocity = 1500;
+        double flyWheelVelocity = 1200;
 
         double GateOpen = 1.0;
         double GateClose = 0.7;
@@ -105,9 +105,9 @@ public class Tele extends LinearOpMode {
             }
 
             if (gamepad1.a) {
-                flyWheelVelocity = 1500;    // close shot
+                flyWheelVelocity = 1200;    // close shot
             } else if (gamepad1.b) {
-                flyWheelVelocity = 2500;   // far shot
+                flyWheelVelocity = 1500;   // far shot
             }
 
             // Set MaxSpeed based on mode
