@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 @TeleOp
-public class FlywheelTuner extends OpMode{
+public class FlywheelPIDFTuner extends OpMode{
     public DcMotorEx flywheelMotor;
 
     public double highVelocity = 1500;
