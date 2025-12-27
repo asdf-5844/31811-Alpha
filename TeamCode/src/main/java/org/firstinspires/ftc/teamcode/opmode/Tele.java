@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
 // import motor configuration type for PIDF
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 @TeleOp(name = "Tele")
 public class Tele extends LinearOpMode {
@@ -16,7 +18,8 @@ public class Tele extends LinearOpMode {
     private DcMotor FrontRight;
     private DcMotor FrontLeft;
     private DcMotor BackLeft;
-    private DcMotor intakeMotor, outtakeMotor;
+    private DcMotor intakeMotor;
+    private DcMotorEx outtakeMotor;
     private CRServo s0, s1, s2, s3, TopServo;
     private Servo GateServo;
     private Servo rgb;
@@ -42,7 +45,7 @@ public class Tele extends LinearOpMode {
         boolean slowMode = false;
         boolean xWasPressed = false;
 
-        double flyWheelPower;
+        double flyWheelVelocity = 1500;
 
         double GateOpen = 1.0;
         double GateClose = 0.7;
@@ -60,11 +63,24 @@ public class Tele extends LinearOpMode {
 
         intakeMotor = hardwareMap.get(DcMotor.class, "m1");
 
-        outtakeMotor = hardwareMap.get(DcMotor.class, "m2");
+        outtakeMotor = hardwareMap.get(DcMotorEx.class, "m2");
+
         MotorConfigurationType motorConfigurationType = outtakeMotor.getMotorType().clone();
         motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
         outtakeMotor.setMotorType(motorConfigurationType);
         outtakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        PIDFCoefficients flywheelPIDF = new PIDFCoefficients(
+                34.0,
+                0.0,
+                0.0,
+                13.0
+        );
+        outtakeMotor.setPIDFCoefficients(
+                DcMotor.RunMode.RUN_USING_ENCODER,
+                flywheelPIDF
+        );
+
 
         telemetry.addData(">", "Hardware Initialized");
         telemetry.update();
@@ -89,11 +105,9 @@ public class Tele extends LinearOpMode {
             }
 
             if (gamepad1.a) {
-                flyWheelPower = 0.7; // medium shot
+                flyWheelVelocity = 1500;    // close shot
             } else if (gamepad1.b) {
-                flyWheelPower = 0.8; // far shot
-            } else {
-                flyWheelPower = 0.33; // default/close
+                flyWheelVelocity = 2500;   // far shot
             }
 
             // Set MaxSpeed based on mode
@@ -107,9 +121,9 @@ public class Tele extends LinearOpMode {
             MecanumDrive(forward, right, rotate, MaxSpeed);
 
             // --- OUTTAKE + TRANSPORT LOGIC ---
-            // PRIORITY 1 — REVERSE EVERYTHING
+
+            // Emergency Reverse
             if (gamepad2.left_bumper) {
-                outtakePower(-0.6);
                 transportPower(-1.0);
                 intakePower(0.7);
             }
@@ -117,20 +131,21 @@ public class Tele extends LinearOpMode {
                 // BOTH TRIGGERS → shoot AND intake
                 rgb.setPosition(0.5); // GREEN
 
-                // Flywheel ON
-                outtakePower(flyWheelPower);
+                // Flywheel Running
+                outtakeVelocity(flyWheelVelocity);
+
                 // Open Gate to let balls go through
                 GateServo.setPosition(GateOpen);
                 // Feed balls in
-                transportPower(0.3);
+                transportPower(1.0);
                 // Intake running to bring next ball up
                 intakePower(gamepad2.left_trigger);
             }
             else if (gamepad2.right_trigger > 0.1) {
                 rgb.setPosition(0.3); // ORANGE
 
-                // ONLY FLYWHEEL SPIN-UP
-                outtakePower(flyWheelPower);
+                // Spin Up Flywheel
+                outtakeVelocity(flyWheelVelocity);
 
                 // NO FEEDING unless A or intake pressed
                 transportPower(0);
@@ -143,24 +158,16 @@ public class Tele extends LinearOpMode {
                 intakePower(gamepad2.left_trigger);
 
                 // Transport moves ball up
-                transportPower(0.3);
+                transportPower(0.8);
 
                 // Close gate
                 GateServo.setPosition(GateClose);
             }
-            else if (gamepad2.a) {
-                // MANUAL FEED
-                transportPower(1.0);
-                // If flywheel is spinning, keep power
-                if (outtakeMotor.getPower() > 0.1) {
-                    outtakePower(outtakeMotor.getPower());
-                }
-            }
             else {
                 // NOTHING PRESSED
+                outtakeMotor.setPower(0);
                 intakePower(0);
                 transportPower(0);
-                outtakePower(0);
             }
 
             if (gamepad2.b) {
@@ -176,7 +183,12 @@ public class Tele extends LinearOpMode {
             telemetry.addData("Turn Power",  "%.2f", rotate);
             telemetry.addLine();
             telemetry.addData("Intake Power",  "%.2f", intakeMotor.getPower());
-            telemetry.addData("Outtake Motor Power", "%.2f", outtakeMotor.getPower());
+
+            telemetry.addData("Flywheel Target", "%.0f", flyWheelVelocity);
+            telemetry.addData("Flywheel Velocity", "%.0f", outtakeMotor.getVelocity());
+            telemetry.addData("Flywheel Error",
+                    "%.0f", flyWheelVelocity - outtakeMotor.getVelocity());
+
             telemetry.addLine();
             telemetry.addData("LY", gamepad1.left_stick_y);
             telemetry.addData("LX", gamepad1.left_stick_x);
@@ -217,7 +229,11 @@ public class Tele extends LinearOpMode {
         TopServo.setPower(mPower);
     }
 
-    public void outtakePower(double mPower) {
-        outtakeMotor.setPower(mPower);
+    public void outtakeVelocity(double velocity) {
+        if (velocity < 50) {   // small deadband
+            outtakeMotor.setPower(0);
+        } else {
+            outtakeMotor.setVelocity(velocity);
+        }
     }
 }
