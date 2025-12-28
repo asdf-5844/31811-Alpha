@@ -107,7 +107,7 @@ public class SoloDrive extends LinearOpMode {
             if (gamepad1.a) {
                 flyWheelVelocity = 1200;    // close shot
             } else if (gamepad1.b) {
-                flyWheelVelocity = 1500;   // far shot
+                flyWheelVelocity = 1000;   // far shot
             }
 
             // Set MaxSpeed based on mode
@@ -168,13 +168,6 @@ public class SoloDrive extends LinearOpMode {
                 outtakeMotor.setPower(0);
                 intakePower(0);
                 transportPower(0);
-            }
-
-            if (gamepad1.b) {
-                GateServo.setPosition(GateOpen);
-            }
-            if (gamepad1.y) {
-                GateServo.setPosition(GateClose);
             }
 
             // Send telemetry messages to explain controls and show robot status
