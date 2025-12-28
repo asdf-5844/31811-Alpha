@@ -19,7 +19,7 @@ public class FlywheelPIDFTuner extends OpMode{
     double F=0;
     double P=0;
 
-    double[] stepSizes = {10.0, 1.0, 0.1, 0.001, 0.0001};
+    double[] stepSizes = {10.0, 1.0, 0.1, 0.01, 0.001};
 
     int stepIndex = 1; // change at by 1
 

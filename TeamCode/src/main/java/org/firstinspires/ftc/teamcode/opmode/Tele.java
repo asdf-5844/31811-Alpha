@@ -71,16 +71,15 @@ public class Tele extends LinearOpMode {
         outtakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         PIDFCoefficients flywheelPIDF = new PIDFCoefficients(
-                34.0,
+                33.77,
                 0.0,
                 0.0,
-                13.0
+                12.81
         );
         outtakeMotor.setPIDFCoefficients(
                 DcMotor.RunMode.RUN_USING_ENCODER,
                 flywheelPIDF
         );
-
 
         telemetry.addData(">", "Hardware Initialized");
         telemetry.update();
