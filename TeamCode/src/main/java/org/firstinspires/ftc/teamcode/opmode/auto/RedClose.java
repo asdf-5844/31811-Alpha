@@ -35,8 +35,8 @@ public class RedClose extends LinearOpMode {
             GateServo.setPosition(GateClose);
             drive.goForward(-700);
 
-            // First shooting cycle, 2 sec spinup
-            shootSequence(2000, 4000);
+            // First shooting cycle
+            shootSequence(3000);
 
             drive.turnLeft(-450);
             drive.goForward(-400);
@@ -54,17 +54,21 @@ public class RedClose extends LinearOpMode {
             drive.turnLeft(450);
             drive.goForward(200);
 
-            // Second shooting cycle, 2.5 sec spinup
-            shootSequence(2500, 4000);
+            // Second shooting cycle
+            shootSequence(3000);
 
             // Get out of launch zone
             drive.goForward(-1000);
             drive.strafeLeft(-1000);
         }
     }
-    private void shootSequence(long spinUpTime, long feedTime) {
+    private void shootSequence(long feedTime) {
         outtake.shoot();
-        sleep(spinUpTime);
+
+        // Wait for flywheel to reach velocity
+        while (opModeIsActive() && !outtake.atSpeed()) {
+            idle();
+        }
 
         GateServo.setPosition(GateOpen);
         transport.move(1.0);

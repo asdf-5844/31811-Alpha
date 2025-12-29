@@ -115,7 +115,7 @@ public class SoloDrive extends LinearOpMode {
             if (slowMode) {
                 MaxSpeed = 0.3;
             } else {
-                MaxSpeed = 0.8;
+                MaxSpeed = 0.6;
             }
 
             MecanumDrive(forward, right, rotate, MaxSpeed);

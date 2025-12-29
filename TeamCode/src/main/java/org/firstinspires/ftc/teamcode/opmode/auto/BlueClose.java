@@ -36,7 +36,7 @@ public class BlueClose extends LinearOpMode {
             GateServo.setPosition(GateClose);
             drive.goForward(-700);
 
-            // First shooting cycle, 2 sec spinup
+            // First shooting cycle
             shootSequence(3000);
 
             drive.turnLeft(450);
@@ -55,7 +55,7 @@ public class BlueClose extends LinearOpMode {
             drive.turnLeft(-450);
             drive.goForward(200);
 
-            // Second shooting cycle, 2.5 sec spinup
+            // Second shooting cycle
             shootSequence(3000);
 
             // Get out of launch zone
