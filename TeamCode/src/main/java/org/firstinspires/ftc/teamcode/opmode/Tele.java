@@ -157,7 +157,7 @@ public class Tele extends LinearOpMode {
                 intakePower(gamepad2.left_trigger);
 
                 // Transport moves ball up
-                transportPower(0.8);
+                transportPower(1.0);
 
                 // Close gate
                 GateServo.setPosition(GateClose);
@@ -226,11 +226,7 @@ public class Tele extends LinearOpMode {
         s2.setPower(-mPower);
         s3.setPower(-mPower);
 
-        if (mPower > 0) {
-            TopServo.setPower(1.0);
-        } else {
-            TopServo.setPower(0.0);
-        }
+        TopServo.setPower(mPower);
     }
 
     public void outtakeVelocity(double velocity) {

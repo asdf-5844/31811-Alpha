@@ -220,11 +220,7 @@ public class SoloDrive extends LinearOpMode {
         s2.setPower(-mPower);
         s3.setPower(-mPower);
 
-        if (mPower > 0) {
-            TopServo.setPower(1.0);
-        } else {
-            TopServo.setPower(0.0);
-        }
+        TopServo.setPower(mPower);
     }
 
     public void outtakeVelocity(double velocity) {
