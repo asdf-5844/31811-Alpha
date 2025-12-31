@@ -225,7 +225,7 @@ public class Tele extends LinearOpMode {
         s1.setPower(mPower);
         s2.setPower(-mPower);
         s3.setPower(-mPower);
-        TopServo.setPower(mPower);
+        TopServo.setPower(1.0);
     }
 
     public void outtakeVelocity(double velocity) {
