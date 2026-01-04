@@ -7,14 +7,15 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 
 import org.firstinspires.ftc.teamcode.paths.BluePath9;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @Autonomous(name = "BlueClose9", group = "Auto")
 public class BlueClose9 extends LinearOpMode {
 
     private Follower follower;
-    private Paths paths;
+    BluePath9 paths;
 
-    private enum AutoState {
+    private enum PathState {
         SCORE_PRELOAD,
         MOVE1,
         INTAKE1,
@@ -27,19 +28,19 @@ public class BlueClose9 extends LinearOpMode {
         DONE
     }
 
-    private AutoState state = AutoState.SCORE_PRELOAD;
+    private PathState state = PathState.SCORE_PRELOAD;
 
     @Override
     public void runOpMode() {
 
-        follower = new Follower(hardwareMap);
+        follower = Constants.createFollower(hardwareMap);
 
-        // MUST match your visualizer start pose
+        // visualizer start pose
         follower.setStartingPose(
                 new Pose(21.762, 126.474, Math.toRadians(135))
         );
 
-        paths = new Paths(follower);
+        paths = new BluePath9(follower);
 
         waitForStart();
 
@@ -56,62 +57,62 @@ public class BlueClose9 extends LinearOpMode {
                 case SCORE_PRELOAD:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.move1);
-                        state = AutoState.MOVE1;
+                        state = PathState.MOVE1;
                     }
                     break;
 
                 case MOVE1:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.intake1);
-                        state = AutoState.INTAKE1;
+                        state = PathState.INTAKE1;
                     }
                     break;
 
                 case INTAKE1:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.score1);
-                        state = AutoState.SCORE1;
+                        state = PathState.SCORE1;
                     }
                     break;
 
                 case SCORE1:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.move2);
-                        state = AutoState.MOVE2;
+                        state = PathState.MOVE2;
                     }
                     break;
 
                 case MOVE2:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.intake2);
-                        state = AutoState.INTAKE2;
+                        state = PathState.INTAKE2;
                     }
                     break;
 
                 case INTAKE2:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.move3);
-                        state = AutoState.MOVE3;
+                        state = PathState.MOVE3;
                     }
                     break;
 
                 case MOVE3:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.score2);
-                        state = AutoState.SCORE2;
+                        state = PathState.SCORE2;
                     }
                     break;
 
                 case SCORE2:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.park);
-                        state = AutoState.PARK;
+                        state = PathState.PARK;
                     }
                     break;
 
                 case PARK:
                     if (!follower.isBusy()) {
-                        state = AutoState.DONE;
+                        state = PathState.DONE;
                     }
                     break;
 
@@ -119,6 +120,12 @@ public class BlueClose9 extends LinearOpMode {
                     // Auto finished
                     break;
             }
+            // Feedback to Driver Hub for debugging
+            telemetry.addData("path state", state);
+            telemetry.addData("x", follower.getPose().getX());
+            telemetry.addData("y", follower.getPose().getY());
+            telemetry.addData("heading", follower.getPose().getHeading());
+            telemetry.update();
         }
     }
 }
