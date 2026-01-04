@@ -7,16 +7,17 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 
 import org.firstinspires.ftc.teamcode.paths.BluePath9;
+import org.firstinspires.ftc.teamcode.paths.RedPath9;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystem.Intake;
 import org.firstinspires.ftc.teamcode.subsystem.Outtake;
 import org.firstinspires.ftc.teamcode.subsystem.Transport;
 
-@Autonomous(name = "BlueClose9", group = "Pedro")
-public class BlueClose9 extends LinearOpMode {
+@Autonomous(name = "RedClose9", group = "Pedro")
+public class RedClose9 extends LinearOpMode {
 
     private Follower follower;
-    BluePath9 paths;
+    RedPath9 paths;
 
     private enum PathState {
         SCORE_PRELOAD,
@@ -52,7 +53,7 @@ public class BlueClose9 extends LinearOpMode {
                 new Pose(21.762, 126.474, Math.toRadians(135))
         );
 
-        paths = new BluePath9(follower);
+        paths = new RedPath9(follower);
 
         waitForStart();
 

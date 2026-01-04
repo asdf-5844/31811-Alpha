@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Intake;
 import org.firstinspires.ftc.teamcode.subsystem.Transport;
 import org.firstinspires.ftc.teamcode.subsystem.Outtake;
 
-@Autonomous(name = "RedClose6")
+@Autonomous(name = "RedClose6", group = "Old")
 public class RedClose6 extends LinearOpMode {
     private Servo GateServo;
     private final double GateClose = 0.7;

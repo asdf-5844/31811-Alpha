@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
-@TeleOp(name = "Tele")
+@TeleOp(name = "Tele", group = "Important")
 public class Tele extends LinearOpMode {
 
     private DcMotor BackRight;
