@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 
-import org.firstinspires.ftc.teamcode.paths.BluePath9;
+import org.firstinspires.ftc.teamcode.paths.Path9;
+import org.firstinspires.ftc.teamcode.util.AllianceMirror;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystem.Intake;
 import org.firstinspires.ftc.teamcode.subsystem.Outtake;
@@ -16,7 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystem.Transport;
 public class BlueClose9 extends LinearOpMode {
 
     private Follower follower;
-    BluePath9 paths;
+    Path9 paths;
 
     private enum PathState {
         SCORE_PRELOAD,
@@ -47,12 +48,22 @@ public class BlueClose9 extends LinearOpMode {
         transport.stop();
         outtake.stop();
 
+        boolean mirror = false;
         // visualizer start pose
+        double startX = 21.762;
+        double startY = 126.474;
+        double startHeading = Math.toRadians(135);
+
+        Pose blueStart = new Pose(startX, startY, startHeading);
+        Pose start = AllianceMirror.mirrorPose(blueStart, mirror);
+
+        follower.setStartingPose(start);
+
         follower.setStartingPose(
                 new Pose(21.762, 126.474, Math.toRadians(135))
         );
 
-        paths = new BluePath9(follower);
+        paths = new Path9(follower, false);
 
         waitForStart();
 
