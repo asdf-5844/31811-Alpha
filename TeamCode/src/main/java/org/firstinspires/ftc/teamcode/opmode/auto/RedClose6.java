@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.hardware.AutoMecanum;
 import org.firstinspires.ftc.teamcode.subsystem.Intake;
 import org.firstinspires.ftc.teamcode.subsystem.Transport;
-import org.firstinspires.ftc.teamcode.subsystem.Outtake;
+import org.firstinspires.ftc.teamcode.subsystem.Outtake1;
 
 @Autonomous(name = "RedClose6", group = "Old")
 public class RedClose6 extends LinearOpMode {
@@ -17,7 +17,7 @@ public class RedClose6 extends LinearOpMode {
     private AutoMecanum drive;
     private Transport transport;
     private Intake intake;
-    private Outtake outtake;
+    private Outtake1 outtake1;
 
     @Override
     public void runOpMode() {
@@ -25,7 +25,7 @@ public class RedClose6 extends LinearOpMode {
         drive = new AutoMecanum(this, hardwareMap);
         transport = new Transport(hardwareMap);
         intake = new Intake(hardwareMap);
-        outtake = new Outtake(hardwareMap);
+        outtake1 = new Outtake1(hardwareMap);
 
         // Initialize Gate Servo
         GateServo = hardwareMap.get(Servo.class, "GateServo");
@@ -63,10 +63,10 @@ public class RedClose6 extends LinearOpMode {
         }
     }
     private void shootSequence(long feedTime) {
-        outtake.shoot();
+        outtake1.shoot();
 
         // Wait for flywheel to reach velocity
-        while (opModeIsActive() && !outtake.atSpeed()) {
+        while (opModeIsActive() && !outtake1.atSpeed()) {
             idle();
         }
 
@@ -76,7 +76,7 @@ public class RedClose6 extends LinearOpMode {
 
         sleep(feedTime);
 
-        outtake.stop();
+        outtake1.stop();
         transport.stop();
         intake.stop();
         GateServo.setPosition(GateClose);

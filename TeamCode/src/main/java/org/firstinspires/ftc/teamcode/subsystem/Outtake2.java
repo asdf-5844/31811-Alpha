@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class Outtake {
+public class Outtake2 {
 
     private DcMotorEx outtakeMotor;
     private Servo gateServo;
@@ -19,7 +19,7 @@ public class Outtake {
     private boolean firing = false;
 
     public static final double SHOOT_VELOCITY = 1000;
-    public Outtake(HardwareMap hardwareMap) {
+    public Outtake2(HardwareMap hardwareMap) {
         outtakeMotor = hardwareMap.get(DcMotorEx.class, "m2");
         outtakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);

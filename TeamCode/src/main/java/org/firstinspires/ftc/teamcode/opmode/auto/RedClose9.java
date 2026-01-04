@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.paths.Path9;
 import org.firstinspires.ftc.teamcode.util.AllianceMirror;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystem.Intake;
-import org.firstinspires.ftc.teamcode.subsystem.Outtake;
+import org.firstinspires.ftc.teamcode.subsystem.Outtake2;
 import org.firstinspires.ftc.teamcode.subsystem.Transport;
 
 @Autonomous(name = "RedClose9", group = "Pedro")
@@ -34,7 +34,7 @@ public class RedClose9 extends LinearOpMode {
 
     private PathState state = PathState.SCORE_PRELOAD;
     private Intake intake;
-    private Outtake outtake;
+    private Outtake2 outtake;
     private Transport transport;
 
     @Override
@@ -42,7 +42,7 @@ public class RedClose9 extends LinearOpMode {
 
         follower = Constants.createFollower(hardwareMap);
         intake = new Intake(hardwareMap);
-        outtake = new Outtake(hardwareMap);
+        outtake = new Outtake2(hardwareMap);
         transport = new Transport(hardwareMap);
         intake.stop();
         transport.stop();
@@ -51,9 +51,9 @@ public class RedClose9 extends LinearOpMode {
         boolean mirror = true; // cuz red side
 
         // visualizer start pose
-        double startX = 21.762;
+        double startX = 122.238;
         double startY = 126.474;
-        double startHeading = Math.toRadians(135);
+        double startHeading = Math.toRadians(35);
 
         Pose blueStart = new Pose(startX, startY, startHeading);
         Pose start = AllianceMirror.mirrorPose(blueStart, mirror);

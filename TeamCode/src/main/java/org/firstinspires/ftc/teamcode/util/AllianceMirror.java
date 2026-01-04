@@ -11,10 +11,10 @@ public class AllianceMirror {
                 FIELD_SIZE - p.getX(),
                 p.getY()
         );
-        // Pose in pedro is (x,y)
-        // Headings are handled separately by mirroring angles
     }
 
+    // Pose in pedro is (x,y)
+    // Headings are handled separately by mirroring angles
     public static double mirrorHeading(double headingRad, boolean isRed) {
         if (!isRed) return headingRad;
         return Math.toRadians(180)-headingRad; // The heading is mirrored
