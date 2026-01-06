@@ -12,14 +12,33 @@ public class Outtake2 {
     private Servo gateServo;
     private Transport transport;
     private Intake intake;
-    private static final double GATE_OPEN = 0.7;
-    private static final double GATE_CLOSED = 1.0;
-    private static final double FEED_TIME = 0.30; // seconds
-    private final ElapsedTime fireTimer = new ElapsedTime();
+    private final ElapsedTime stateTimer = new ElapsedTime();
     private boolean firing = false;
 
-    public static final double SHOOT_VELOCITY = 1000;
-    public Outtake2(HardwareMap hardwareMap) {
+    private enum FlywheelState {
+        IDLE,
+        SPIN_UP,
+        LAUNCH,
+        RESET_GATE
+    }
+    private FlywheelState flywheelState;
+
+    // Gate Logic
+    private static final double GATE_OPEN = 0.7;
+    private static final double GATE_CLOSED = 1.0;
+    private double GATE_OPEN_TIME = 0.25;
+    private double GATE_CLOSE_TIME = 0.25;
+
+    private static final double FEED_TIME = 0.30; // seconds
+
+    // Flywheel Constants
+    private int shotsRemaining = 0;
+    private double flywheelVelocity = 0;
+    private double TARGET_SHOOT_VELOCITY = 1000;
+    private double FLYWHEEL_MAX_SPINUP_TIME = 1;
+
+    public void init(HardwareMap hardwareMap) {
+        gateServo = hardwareMap.get(Servo.class, "GateServo");
         outtakeMotor = hardwareMap.get(DcMotorEx.class, "m2");
         outtakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -29,10 +48,58 @@ public class Outtake2 {
                 0.0,
                 12.81
         );
+
+        flywheelState = FlywheelState.IDLE;
+
+        gateServo.setPosition(GATE_CLOSED);
+        outtakeMotor.setPower(0);
+
+    }
+
+    public void update() {
+        switch (flywheelState){
+            case IDLE:
+                if (shotsRemaining > 0) {
+                    gateServo.setPosition(GATE_CLOSED);
+                    outtakeMotor.setVelocity(TARGET_SHOOT_VELOCITY);
+
+                    stateTimer.reset();
+                    flywheelState = FlywheelState.SPIN_UP;
+                }
+                break;
+            case SPIN_UP:
+                if (atSpeed() || stateTimer.seconds() > FLYWHEEL_MAX_SPINUP_TIME) {
+                    gateServo.setPosition(GATE_OPEN);
+                    stateTimer.reset();
+
+                    flywheelState = FlywheelState.LAUNCH;
+                }
+                break;
+            case LAUNCH:
+                if (stateTimer.seconds() > GATE_OPEN_TIME) {
+                    shotsRemaining--; // increment by -1
+                    gateServo.setPosition(GATE_CLOSED);
+                    stateTimer.reset();
+
+                    flywheelState = FlywheelState.RESET_GATE;
+                }
+
+            case RESET_GATE:
+                if (stateTimer.seconds() > GATE_CLOSE_TIME) {
+                    if (shotsRemaining > 0) {
+                        stateTimer.reset();
+                        flywheelState = FlywheelState.SPIN_UP;
+                    }
+                    else {
+                        outtakeMotor.setPower(0);
+                        flywheelState = FlywheelState.IDLE;
+                    }
+                }
+        }
     }
 
     public void shoot() {
-        outtakeMotor.setVelocity(SHOOT_VELOCITY);
+        outtakeMotor.setVelocity(TARGET_SHOOT_VELOCITY);
     }
 
     public void setShootVelocity(double velocity) {
@@ -41,7 +108,7 @@ public class Outtake2 {
 
     public boolean atSpeed() {
         return Math.abs(
-                outtakeMotor.getVelocity() - SHOOT_VELOCITY
+                outtakeMotor.getVelocity() - TARGET_SHOOT_VELOCITY
         ) < 50; // tolerance
     }
 
@@ -54,7 +121,7 @@ public class Outtake2 {
         transport.move(1.0);
         intake.intake(0.7);
 
-        fireTimer.reset();
+        stateTimer.reset();
         firing = true;
     }
 
