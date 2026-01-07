@@ -11,6 +11,7 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystem.Outtake2;
 
 @Autonomous
 @Disabled
@@ -18,6 +19,10 @@ public class PedroTest extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, opModeTimer;
+
+    // Flywheel Setup
+    private Outtake2 outtake = new Outtake2();
+    private boolean shotsTriggered = false;
 
     public enum PathState {
         // START POSITION_END POSITION
@@ -56,10 +61,18 @@ public class PedroTest extends OpMode {
                 setPathState(PathState.SHOOT_PRELOAD); // reset the timer & make new state
                 break; // must always break
             case SHOOT_PRELOAD:
-                // check if follower done its path and 5 seconds has elapsed (shooting ball time)
-                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 5) {
-                    follower.followPath(driveShootPosEndPos, true);
-                    setPathState(PathState.DRIVE_SHOOTPOS_ENDPOS);
+                // check if follower done its path
+                if (!follower.isBusy()) {
+                    // requested shots yet?
+                    if (!shotsTriggered) {
+                       outtake.fireShots(3);
+                       shotsTriggered = true;
+                    }
+                    else if (shotsTriggered && !outtake.isBusy()) {
+                        // shots are done free to transition
+                        follower.followPath(driveShootPosEndPos, true);
+                        setPathState(PathState.DRIVE_SHOOTPOS_ENDPOS);
+                    }
                 }
                 break;
             case DRIVE_SHOOTPOS_ENDPOS:
@@ -78,6 +91,9 @@ public class PedroTest extends OpMode {
     public void setPathState(PathState newState) {
         pathState = newState;
         pathTimer.resetTimer();
+
+        shotsTriggered = false;
+
     }
 
     @Override
@@ -87,6 +103,7 @@ public class PedroTest extends OpMode {
         opModeTimer = new Timer();
         follower = Constants.createFollower(hardwareMap);
         // TODO: add in any other init mechanisms
+        outtake.init(hardwareMap);
 
         buildPaths();
         follower.setPose(startPose);
@@ -100,6 +117,7 @@ public class PedroTest extends OpMode {
     @Override
     public void loop() {
         follower.update();
+        outtake.update();
         statePathUpdate();
 
         // Feedback to Driver Hub for debugging

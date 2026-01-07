@@ -7,6 +7,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 
 import org.firstinspires.ftc.teamcode.paths.Path9;
+import org.firstinspires.ftc.teamcode.tests.PedroTest;
 import org.firstinspires.ftc.teamcode.util.AllianceMirror;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystem.Intake;
@@ -33,8 +34,13 @@ public class BlueClose9 extends LinearOpMode {
     }
 
     private PathState state = PathState.SCORE_PRELOAD;
+
+    // Flywheel Setup
+    private Outtake2 outtake = new Outtake2();
+    private boolean shotsTriggered = false;
+
+
     private Intake intake;
-    private Outtake2 outtake;
     private Transport transport;
 
     @Override
@@ -42,11 +48,11 @@ public class BlueClose9 extends LinearOpMode {
 
         follower = Constants.createFollower(hardwareMap);
         intake = new Intake(hardwareMap);
-        outtake = new Outtake2(hardwareMap);
         transport = new Transport(hardwareMap);
         intake.stop();
         transport.stop();
-        outtake.stop();
+
+        outtake.init(hardwareMap);
 
         boolean mirror = false;
         // visualizer start pose
@@ -78,7 +84,6 @@ public class BlueClose9 extends LinearOpMode {
             switch (state) {
 
                 case SCORE_PRELOAD:
-                    outtake.setShootVelocity(1000);
                     if (!follower.isBusy()) {
                         follower.followPath(paths.move1);
                         state = PathState.MOVE1;
@@ -143,6 +148,13 @@ public class BlueClose9 extends LinearOpMode {
                 case DONE:
                     // Auto finished
                     break;
+            }
+
+            public void setPathState(PathState newState) {
+                state = newState;
+                pathTimer.resetTimer();
+
+                shotsTriggered = false;
             }
 
             // Feedback to Driver Hub for debugging
