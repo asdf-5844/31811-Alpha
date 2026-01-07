@@ -7,12 +7,11 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 
 import org.firstinspires.ftc.teamcode.paths.Path9;
-import org.firstinspires.ftc.teamcode.tests.PedroTest;
 import org.firstinspires.ftc.teamcode.util.AllianceMirror;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystem.Intake;
-import org.firstinspires.ftc.teamcode.subsystem.Outtake2;
 import org.firstinspires.ftc.teamcode.subsystem.Transport;
+import org.firstinspires.ftc.teamcode.subsystem.Outtake3;
 
 @Autonomous(name = "BlueClose9", group = "Pedro")
 public class BlueClose9 extends LinearOpMode {
@@ -35,14 +34,16 @@ public class BlueClose9 extends LinearOpMode {
         DONE
     }
 
+    private void setState(PathState newState) {
+        state = newState;
+        shotsTriggered = false; // allows each LAUNCH state to trigger once
+    }
 
-    private PathState state = PathState.SCORE_PRELOAD;
+    private PathState state = PathState.DRIVE_TO_PRELOAD_SHOT;
 
     // Flywheel Setup
-    private Outtake2 outtake = new Outtake2();
+    private Outtake3 outtake = new Outtake3();
     private boolean shotsTriggered = false;
-
-
     private Intake intake;
     private Transport transport;
 
@@ -68,80 +69,93 @@ public class BlueClose9 extends LinearOpMode {
 
         follower.setStartingPose(start);
 
-        follower.setStartingPose(
-                new Pose(21.762, 126.474, Math.toRadians(135))
-        );
-
         paths = new Path9(follower, false);
 
         waitForStart();
 
-        // Start first path ONCE
+        // Start first path ONLY ONCE
         follower.followPath(paths.scorepreload);
 
-        // Loop
+        // finite state machine loop
         while (opModeIsActive()) {
 
             follower.update();
+            outtake.update();
 
             switch (state) {
-
                 case DRIVE_TO_PRELOAD_SHOT:
                      if (!follower.isBusy()) {
-                        follower.followPath(paths.move1);
                         state = PathState.LAUNCH_PRELOADS;
                     }
                     break;
+
+                // Start the next path when leaving the previous state
                 case LAUNCH_PRELOADS:
+                    if (!shotsTriggered) {
+                        outtake.startLaunch(3);
+                        shotsTriggered = true;
+                    } else if (!outtake.isBusy()) {
+                        follower.followPath(paths.move1);
+                        setState(PathState.MOVE1);
+                    }
+                    break;
 
                 case MOVE1:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.intake1);
-                        state = PathState.INTAKE1;
+                        setState(PathState.INTAKE1);
                     }
                     break;
 
                 case INTAKE1:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.score1);
-                        state = PathState.DRIVE_TO_SCORE1;
+                        setState(PathState.DRIVE_TO_SCORE1);
                     }
                     break;
 
                 case DRIVE_TO_SCORE1:
                     if (!follower.isBusy()) {
-                        follower.followPath(paths.move2);
-                        state = PathState.LAUNCH1;
+                        setState(PathState.LAUNCH1);
                     }
                     break;
 
                 case LAUNCH1:
+                    if (!shotsTriggered) {
+                        outtake.startLaunch(3);
+                        shotsTriggered = true;
+                    } else if (!outtake.isBusy()) {
+                        follower.followPath(paths.move2);
+                        setState(PathState.MOVE2);
+                    }
+                    break;
 
                 case MOVE2:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.intake2);
-                        state = PathState.INTAKE2;
+                        setState(PathState.INTAKE2);
                     }
                     break;
 
                 case INTAKE2:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.move3);
-                        state = PathState.DRIVE_TO_SCORE2;
+                        setState(PathState.DRIVE_TO_SCORE2);
                     }
                     break;
 
                 case DRIVE_TO_SCORE2:
                     if (!follower.isBusy()) {
-                        follower.followPath(paths.score2);
-                        state = PathState.LAUNCH2;
+                        setState(PathState.LAUNCH2);
                     }
                     break;
 
                 case LAUNCH2:
-                    if (!follower.isBusy()) {
-                        follower.followPath(paths.park);
-                        state = PathState.PARK;
+                    if (!shotsTriggered) {
+                        outtake.startLaunch(3);
+                        shotsTriggered = true;
+                    } else if (!outtake.isBusy()) {
+                        setState(PathState.PARK);
                     }
                     break;
 

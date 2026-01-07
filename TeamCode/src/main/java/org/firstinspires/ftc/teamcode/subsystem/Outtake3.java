@@ -28,7 +28,7 @@ public class Outtake3 {
     private double INTAKE_POWER  = 0.8;    // tune
 
     // How long it takes to push ONE ball through when feeding (tune!)
-    private static final double SECONDS_PER_BALL = 0.25;
+    private static final double SECONDS_PER_BALL = 0.3;
 
 
     private enum ShootState {
@@ -117,7 +117,7 @@ public class Outtake3 {
         ballsToShoot = balls;
 
         // Compute feed time
-        feedDuration = ballsToShoot * SECONDS_PER_BALL + 0.5;
+        feedDuration = ballsToShoot * SECONDS_PER_BALL;
 
         // Prep + spin up
         gate.setPosition(GATE_CLOSED);
