@@ -85,12 +85,14 @@ public class BlueClose9 extends LinearOpMode {
             switch (state) {
                 case DRIVE_TO_PRELOAD_SHOT:
                      if (!follower.isBusy()) {
-                        state = PathState.LAUNCH_PRELOADS;
-                    }
+                         setState(PathState.LAUNCH_PRELOADS);
+                     }
                     break;
 
                 // Start the next path when leaving the previous state
                 case LAUNCH_PRELOADS:
+                    if (follower.isBusy()) break; // wait until path before is finished
+
                     if (!shotsTriggered) {
                         outtake.startLaunch(3);
                         shotsTriggered = true;
@@ -121,6 +123,8 @@ public class BlueClose9 extends LinearOpMode {
                     break;
 
                 case LAUNCH1:
+                    if (follower.isBusy()) break; // wait until path before is finished
+
                     if (!shotsTriggered) {
                         outtake.startLaunch(3);
                         shotsTriggered = true;
@@ -146,22 +150,26 @@ public class BlueClose9 extends LinearOpMode {
 
                 case DRIVE_TO_SCORE2:
                     if (!follower.isBusy()) {
+                        follower.followPath(paths.score2);
                         setState(PathState.LAUNCH2);
                     }
                     break;
 
                 case LAUNCH2:
+                    if (follower.isBusy()) break; // wait until score2 path is finished
+
                     if (!shotsTriggered) {
                         outtake.startLaunch(3);
                         shotsTriggered = true;
                     } else if (!outtake.isBusy()) {
+                        follower.followPath(paths.park);
                         setState(PathState.PARK);
                     }
                     break;
 
                 case PARK:
                     if (!follower.isBusy()) {
-                        state = PathState.DONE;
+                        setState(PathState.DONE);
                     }
                     break;
 
