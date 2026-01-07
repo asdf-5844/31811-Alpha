@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.subsystem;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+// FYI: This is Brogan M. Pratt's code
+@Disabled
 public class Outtake2 {
 
     private DcMotorEx outtakeMotor;
@@ -83,6 +86,7 @@ public class Outtake2 {
 
                     flywheelState = FlywheelState.RESET_GATE;
                 }
+                break;
 
             case RESET_GATE:
                 if (stateTimer.seconds() > GATE_CLOSE_TIME) {

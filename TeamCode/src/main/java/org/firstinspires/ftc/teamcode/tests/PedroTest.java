@@ -13,6 +13,7 @@ import com.pedropathing.util.Timer;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystem.Outtake2;
 
+// FYI: This is just Brogan M. Pratt's code
 @Autonomous
 @Disabled
 public class PedroTest extends OpMode {

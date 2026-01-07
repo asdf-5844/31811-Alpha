@@ -21,17 +21,20 @@ public class BlueClose9 extends LinearOpMode {
     Path9 paths;
 
     private enum PathState {
-        SCORE_PRELOAD,
+        DRIVE_TO_PRELOAD_SHOT,
+        LAUNCH_PRELOADS,
         MOVE1,
         INTAKE1,
-        SCORE1,
+        DRIVE_TO_SCORE1,
+        LAUNCH1,
         MOVE2,
         INTAKE2,
-        MOVE3,
-        SCORE2,
+        DRIVE_TO_SCORE2,
+        LAUNCH2,
         PARK,
         DONE
     }
+
 
     private PathState state = PathState.SCORE_PRELOAD;
 
@@ -83,12 +86,13 @@ public class BlueClose9 extends LinearOpMode {
 
             switch (state) {
 
-                case SCORE_PRELOAD:
-                    if (!follower.isBusy()) {
+                case DRIVE_TO_PRELOAD_SHOT:
+                     if (!follower.isBusy()) {
                         follower.followPath(paths.move1);
-                        state = PathState.MOVE1;
+                        state = PathState.LAUNCH_PRELOADS;
                     }
                     break;
+                case LAUNCH_PRELOADS:
 
                 case MOVE1:
                     if (!follower.isBusy()) {
@@ -100,16 +104,18 @@ public class BlueClose9 extends LinearOpMode {
                 case INTAKE1:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.score1);
-                        state = PathState.SCORE1;
+                        state = PathState.DRIVE_TO_SCORE1;
                     }
                     break;
 
-                case SCORE1:
+                case DRIVE_TO_SCORE1:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.move2);
-                        state = PathState.MOVE2;
+                        state = PathState.LAUNCH1;
                     }
                     break;
+
+                case LAUNCH1:
 
                 case MOVE2:
                     if (!follower.isBusy()) {
@@ -121,18 +127,18 @@ public class BlueClose9 extends LinearOpMode {
                 case INTAKE2:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.move3);
-                        state = PathState.MOVE3;
+                        state = PathState.DRIVE_TO_SCORE2;
                     }
                     break;
 
-                case MOVE3:
+                case DRIVE_TO_SCORE2:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.score2);
-                        state = PathState.SCORE2;
+                        state = PathState.LAUNCH2;
                     }
                     break;
 
-                case SCORE2:
+                case LAUNCH2:
                     if (!follower.isBusy()) {
                         follower.followPath(paths.park);
                         state = PathState.PARK;
@@ -148,13 +154,6 @@ public class BlueClose9 extends LinearOpMode {
                 case DONE:
                     // Auto finished
                     break;
-            }
-
-            public void setPathState(PathState newState) {
-                state = newState;
-                pathTimer.resetTimer();
-
-                shotsTriggered = false;
             }
 
             // Feedback to Driver Hub for debugging

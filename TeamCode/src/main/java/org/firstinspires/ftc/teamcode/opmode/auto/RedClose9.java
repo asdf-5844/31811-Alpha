@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.paths.Path9;
 import org.firstinspires.ftc.teamcode.util.AllianceMirror;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystem.Intake;
-import org.firstinspires.ftc.teamcode.subsystem.Outtake2;
+import org.firstinspires.ftc.teamcode.subsystem.Outtake3;
 import org.firstinspires.ftc.teamcode.subsystem.Transport;
 
 @Autonomous(name = "RedClose9", group = "Pedro")
@@ -34,7 +34,7 @@ public class RedClose9 extends LinearOpMode {
 
     private PathState state = PathState.SCORE_PRELOAD;
     private Intake intake;
-    private Outtake2 outtake;
+    private Outtake3 outtake;
     private Transport transport;
 
     @Override
@@ -42,11 +42,11 @@ public class RedClose9 extends LinearOpMode {
 
         follower = Constants.createFollower(hardwareMap);
         intake = new Intake(hardwareMap);
-        outtake = new Outtake2(hardwareMap);
+        outtake.init(hardwareMap);
+
         transport = new Transport(hardwareMap);
         intake.stop();
         transport.stop();
-        outtake.stop();
 
         boolean mirror = true; // cuz red side
 
@@ -79,7 +79,6 @@ public class RedClose9 extends LinearOpMode {
             switch (state) {
 
                 case SCORE_PRELOAD:
-                    outtake.setShootVelocity(1000);
                     if (!follower.isBusy()) {
                         follower.followPath(paths.move1);
                         state = PathState.MOVE1;
