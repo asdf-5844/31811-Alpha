@@ -95,15 +95,19 @@ public class Outtake2 {
                         flywheelState = FlywheelState.IDLE;
                     }
                 }
+                break;
         }
     }
 
-    public void shoot() {
-        outtakeMotor.setVelocity(TARGET_SHOOT_VELOCITY);
+    // Helper safety function
+    public void fireShots(int numberOfShots) {
+        if (flywheelState == FlywheelState.IDLE) {
+            shotsRemaining = numberOfShots;
+        }
     }
 
-    public void setShootVelocity(double velocity) {
-        outtakeMotor.setVelocity(velocity);
+    public boolean isBusy() {
+        return flywheelState != FlywheelState.IDLE;
     }
 
     public boolean atSpeed() {
@@ -115,14 +119,4 @@ public class Outtake2 {
     public void stop() {
         outtakeMotor.setPower(0);
     }
-
-    public void fireSequence() {
-        gateServo.setPosition(GATE_OPEN);
-        transport.move(1.0);
-        intake.intake(0.7);
-
-        stateTimer.reset();
-        firing = true;
-    }
-
 }
