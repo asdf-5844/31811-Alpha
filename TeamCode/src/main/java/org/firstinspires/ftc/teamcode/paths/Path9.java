@@ -19,6 +19,8 @@ public class Path9 {
     public PathChain score2;
     public PathChain park;
 
+    private double scoreX = 32.316;
+    private double scoreY = 109.106;
     // mirror true = Red, false = Blue
 
     public Path9(Follower follower, boolean mirror) {
@@ -26,7 +28,7 @@ public class Path9 {
         scorepreload = follower.pathBuilder().addPath(
                 new BezierLine(
                         AllianceMirror.mirrorPose(new Pose(21.762, 126.474, 0), mirror),
-                        AllianceMirror.mirrorPose(new Pose(32.316, 109.106, 0), mirror)
+                        AllianceMirror.mirrorPose(new Pose(scoreX, scoreY, 0), mirror)
                 )
         ).setConstantHeadingInterpolation(
                 AllianceMirror.mirrorHeading(Math.toRadians(135), mirror)
@@ -54,7 +56,7 @@ public class Path9 {
         score1 = follower.pathBuilder().addPath(
                 new BezierLine(
                         AllianceMirror.mirrorPose(new Pose(13.245, 83.000, 0), mirror),
-                        AllianceMirror.mirrorPose(new Pose(40.829, 102.208, 0), mirror)
+                        AllianceMirror.mirrorPose(new Pose(scoreX, scoreY, 0), mirror)
                 )
         ).setLinearHeadingInterpolation(
                 AllianceMirror.mirrorHeading(Math.toRadians(180), mirror),
@@ -93,7 +95,7 @@ public class Path9 {
         score2 = follower.pathBuilder().addPath(
                 new BezierLine(
                         AllianceMirror.mirrorPose(new Pose(59.510, 86.609, 0), mirror),
-                        AllianceMirror.mirrorPose(new Pose(41.406, 102.016, 0), mirror)
+                        AllianceMirror.mirrorPose(new Pose(scoreX, scoreY, 0), mirror)
                 )
         ).setConstantHeadingInterpolation(
                 AllianceMirror.mirrorHeading(Math.toRadians(125), mirror)

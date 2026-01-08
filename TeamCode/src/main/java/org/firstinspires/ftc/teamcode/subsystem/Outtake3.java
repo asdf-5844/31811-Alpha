@@ -17,8 +17,8 @@ public class Outtake3 {
     private final ElapsedTime timer = new ElapsedTime();
 
     // Tunables
-    private static final double GATE_OPEN = 0.7;
-    private static final double GATE_CLOSED = 1.0;
+    private static final double GATE_OPEN = 1.0;
+    private static final double GATE_CLOSED = 0.7;
 
     private double TARGET_VELOCITY = 1000;     // tune
     private double SPEED_TOLERANCE = 50;
@@ -28,7 +28,7 @@ public class Outtake3 {
     private double INTAKE_POWER  = 0.8;    // tune
 
     // How long it takes to push ONE ball through when feeding (tune!)
-    private static final double SECONDS_PER_BALL = 0.3;
+    private static final double SECONDS_PER_BALL = 0.6;
 
 
     private enum ShootState {
@@ -41,7 +41,7 @@ public class Outtake3 {
     private ShootState state = ShootState.IDLE;
 
     private int ballsToShoot = 0;
-    private double feedDuration = 0.0;
+    private double feedDuration;
 
     public void init(HardwareMap hardwareMap) {
         gate = hardwareMap.get(Servo.class, "GateServo");
