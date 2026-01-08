@@ -66,7 +66,7 @@ public class Path9 {
         move2 = follower.pathBuilder().addPath(
                 new BezierLine(
                         AllianceMirror.mirrorPose(new Pose(SCORE_X, SCORE_Y, 0), mirror),
-                        AllianceMirror.mirrorPose(new Pose(48.513, 60.000, 0), mirror)
+                        AllianceMirror.mirrorPose(new Pose(50.500, 60.000, 0), mirror)
                 )
         ).setLinearHeadingInterpolation(
                 AllianceMirror.mirrorHeading(Math.toRadians(135), mirror),
@@ -85,7 +85,7 @@ public class Path9 {
         move3 = follower.pathBuilder().addPath(
                 new BezierLine(
                         AllianceMirror.mirrorPose(new Pose(14.649, 59.000, 0), mirror),
-                        AllianceMirror.mirrorPose(new Pose(59.510, 86.609, 0), mirror)
+                        AllianceMirror.mirrorPose(new Pose(28.391, 65.049, 0), mirror)
                 )
         ).setLinearHeadingInterpolation(
                 AllianceMirror.mirrorHeading(Math.toRadians(180), mirror),
@@ -94,7 +94,7 @@ public class Path9 {
 
         score2 = follower.pathBuilder().addPath(
                 new BezierLine(
-                        AllianceMirror.mirrorPose(new Pose(59.510, 86.609, 0), mirror),
+                        AllianceMirror.mirrorPose(new Pose(28.391, 65.049, 0), mirror),
                         AllianceMirror.mirrorPose(new Pose(SCORE_X, SCORE_Y, 0), mirror)
                 )
         ).setConstantHeadingInterpolation(

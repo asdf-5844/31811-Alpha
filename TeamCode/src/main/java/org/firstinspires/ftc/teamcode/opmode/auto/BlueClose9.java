@@ -41,6 +41,10 @@ public class BlueClose9 extends LinearOpMode {
 
     private PathState state = PathState.DRIVE_TO_PRELOAD_SHOT;
 
+    // Speeds
+    private static final double TRAVEL_POWER = 0.75;  // normal driving
+    private static final double INTAKE_POWER = 0.45;  // slow for picking up balls
+
     // Flywheel Setup
     private Outtake3 outtake = new Outtake3();
     private boolean shotsTriggered = false;
@@ -62,6 +66,8 @@ public class BlueClose9 extends LinearOpMode {
     public void runOpMode() {
 
         follower = Constants.createFollower(hardwareMap);
+        follower.setMaxPower(TRAVEL_POWER); // default travel speed
+
         intake = new Intake(hardwareMap);
         transport = new Transport(hardwareMap);
         stopIntaking();
@@ -84,6 +90,7 @@ public class BlueClose9 extends LinearOpMode {
         waitForStart();
 
         // Start first path ONLY ONCE
+        follower.setMaxPower(TRAVEL_POWER);
         follower.followPath(paths.scorepreload);
 
         // finite state machine loop
@@ -107,6 +114,7 @@ public class BlueClose9 extends LinearOpMode {
                         outtake.startLaunch(3);
                         shotsTriggered = true;
                     } else if (!outtake.isBusy()) {
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.move1);
                         setState(PathState.MOVE1);
                     }
@@ -115,6 +123,7 @@ public class BlueClose9 extends LinearOpMode {
                 case MOVE1:
                     if (!follower.isBusy()) {
                         startIntaking();
+                        follower.setMaxPower(INTAKE_POWER);
                         follower.followPath(paths.intake1);
                         setState(PathState.INTAKE1);
                     }
@@ -123,6 +132,7 @@ public class BlueClose9 extends LinearOpMode {
                 case INTAKE1:
                     if (!follower.isBusy()) {
                         stopIntaking();
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.score1);
                         setState(PathState.DRIVE_TO_SCORE1);
                     }
@@ -141,6 +151,7 @@ public class BlueClose9 extends LinearOpMode {
                         outtake.startLaunch(3);
                         shotsTriggered = true;
                     } else if (!outtake.isBusy()) {
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.move2);
                         setState(PathState.MOVE2);
                     }
@@ -149,6 +160,7 @@ public class BlueClose9 extends LinearOpMode {
                 case MOVE2:
                     if (!follower.isBusy()) {
                         startIntaking();
+                        follower.setMaxPower(INTAKE_POWER);
                         follower.followPath(paths.intake2);
                         setState(PathState.INTAKE2);
                     }
@@ -157,6 +169,7 @@ public class BlueClose9 extends LinearOpMode {
                 case INTAKE2:
                     if (!follower.isBusy()) {
                         stopIntaking();
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.move3);
                         setState(PathState.DRIVE_TO_SCORE2);
                     }
@@ -164,6 +177,7 @@ public class BlueClose9 extends LinearOpMode {
 
                 case DRIVE_TO_SCORE2:
                     if (!follower.isBusy()) {
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.score2);
                         setState(PathState.LAUNCH2);
                     }
@@ -176,6 +190,7 @@ public class BlueClose9 extends LinearOpMode {
                         outtake.startLaunch(3);
                         shotsTriggered = true;
                     } else if (!outtake.isBusy()) {
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.park);
                         setState(PathState.PARK);
                     }

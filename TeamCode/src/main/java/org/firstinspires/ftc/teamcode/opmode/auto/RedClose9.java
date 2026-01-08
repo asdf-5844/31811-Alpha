@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.paths.Path9;
 import org.firstinspires.ftc.teamcode.util.AllianceMirror;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystem.Intake;
-import org.firstinspires.ftc.teamcode.subsystem.Outtake3;
 import org.firstinspires.ftc.teamcode.subsystem.Transport;
+import org.firstinspires.ftc.teamcode.subsystem.Outtake3;
 
 @Autonomous(name = "RedClose9", group = "Pedro")
 public class RedClose9 extends LinearOpMode {
@@ -20,123 +20,186 @@ public class RedClose9 extends LinearOpMode {
     Path9 paths;
 
     private enum PathState {
-        SCORE_PRELOAD,
+        DRIVE_TO_PRELOAD_SHOT,
+        LAUNCH_PRELOADS,
         MOVE1,
         INTAKE1,
-        SCORE1,
+        DRIVE_TO_SCORE1,
+        LAUNCH1,
         MOVE2,
         INTAKE2,
-        MOVE3,
-        SCORE2,
+        DRIVE_TO_SCORE2,
+        LAUNCH2,
         PARK,
         DONE
     }
 
-    private PathState state = PathState.SCORE_PRELOAD;
+    private void setState(PathState newState) {
+        state = newState;
+        shotsTriggered = false; // allows each LAUNCH state to trigger once
+    }
+
+    private PathState state = PathState.DRIVE_TO_PRELOAD_SHOT;
+
+    // Speeds
+    private static final double TRAVEL_POWER = 0.75;  // normal driving
+    private static final double INTAKE_POWER = 0.45;  // slow for picking up balls
+
+    // Flywheel Setup
+    private Outtake3 outtake = new Outtake3();
+    private boolean shotsTriggered = false;
     private Intake intake;
-    private Outtake3 outtake;
     private Transport transport;
+
+    private void startIntaking() {
+        intake.intake(1.0);
+        transport.move(0.7);
+    }
+
+    private void stopIntaking() {
+        intake.stop();
+        transport.stop();
+    }
+
 
     @Override
     public void runOpMode() {
 
         follower = Constants.createFollower(hardwareMap);
+        follower.setMaxPower(TRAVEL_POWER); // default travel speed
+
         intake = new Intake(hardwareMap);
+        transport = new Transport(hardwareMap);
+        stopIntaking();
+
         outtake.init(hardwareMap);
 
-        transport = new Transport(hardwareMap);
-        intake.stop();
-        transport.stop();
-
-        boolean mirror = true; // cuz red side
+        boolean mirror = true; // SINCE IT IS RED
 
         // visualizer start pose
-        double startX = 122.238;
-        double startY = 126.474;
+        double startX = 67;
+        double startY = 67;
         double startHeading = Math.toRadians(35);
 
-        Pose blueStart = new Pose(startX, startY, startHeading);
-        Pose start = AllianceMirror.mirrorPose(blueStart, mirror);
+        Pose redStart = new Pose(startX, startY, startHeading);
+        Pose start = AllianceMirror.mirrorPose(redStart, mirror);
 
         follower.setStartingPose(start);
-
-        follower.setStartingPose(
-                new Pose(21.762, 126.474, Math.toRadians(135))
-        );
 
         paths = new Path9(follower, false);
 
         waitForStart();
 
-        // Start first path ONCE
+        // Start first path ONLY ONCE
+        follower.setMaxPower(TRAVEL_POWER);
         follower.followPath(paths.scorepreload);
 
-        // Loop
+        // finite state machine loop
         while (opModeIsActive()) {
 
             follower.update();
+            outtake.update();
 
             switch (state) {
-
-                case SCORE_PRELOAD:
+                case DRIVE_TO_PRELOAD_SHOT:
                     if (!follower.isBusy()) {
+                        setState(PathState.LAUNCH_PRELOADS);
+                    }
+                    break;
+
+                // Start the next path when leaving the previous state
+                case LAUNCH_PRELOADS:
+                    if (follower.isBusy()) break; // wait until path before is finished
+
+                    if (!shotsTriggered) {
+                        outtake.startLaunch(3);
+                        shotsTriggered = true;
+                    } else if (!outtake.isBusy()) {
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.move1);
-                        state = PathState.MOVE1;
+                        setState(PathState.MOVE1);
                     }
                     break;
 
                 case MOVE1:
                     if (!follower.isBusy()) {
+                        startIntaking();
+                        follower.setMaxPower(INTAKE_POWER);
                         follower.followPath(paths.intake1);
-                        state = PathState.INTAKE1;
+                        setState(PathState.INTAKE1);
                     }
                     break;
 
                 case INTAKE1:
                     if (!follower.isBusy()) {
+                        stopIntaking();
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.score1);
-                        state = PathState.SCORE1;
+                        setState(PathState.DRIVE_TO_SCORE1);
                     }
                     break;
 
-                case SCORE1:
+                case DRIVE_TO_SCORE1:
                     if (!follower.isBusy()) {
+                        setState(PathState.LAUNCH1);
+                    }
+                    break;
+
+                case LAUNCH1:
+                    if (follower.isBusy()) break; // wait until path before is finished
+
+                    if (!shotsTriggered) {
+                        outtake.startLaunch(3);
+                        shotsTriggered = true;
+                    } else if (!outtake.isBusy()) {
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.move2);
-                        state = PathState.MOVE2;
+                        setState(PathState.MOVE2);
                     }
                     break;
 
                 case MOVE2:
                     if (!follower.isBusy()) {
+                        startIntaking();
+                        follower.setMaxPower(INTAKE_POWER);
                         follower.followPath(paths.intake2);
-                        state = PathState.INTAKE2;
+                        setState(PathState.INTAKE2);
                     }
                     break;
 
                 case INTAKE2:
                     if (!follower.isBusy()) {
+                        stopIntaking();
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.move3);
-                        state = PathState.MOVE3;
+                        setState(PathState.DRIVE_TO_SCORE2);
                     }
                     break;
 
-                case MOVE3:
+                case DRIVE_TO_SCORE2:
                     if (!follower.isBusy()) {
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.score2);
-                        state = PathState.SCORE2;
+                        setState(PathState.LAUNCH2);
                     }
                     break;
 
-                case SCORE2:
-                    if (!follower.isBusy()) {
+                case LAUNCH2:
+                    if (follower.isBusy()) break; // wait until score2 path is finished
+
+                    if (!shotsTriggered) {
+                        outtake.startLaunch(3);
+                        shotsTriggered = true;
+                    } else if (!outtake.isBusy()) {
+                        follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.park);
-                        state = PathState.PARK;
+                        setState(PathState.PARK);
                     }
                     break;
 
                 case PARK:
                     if (!follower.isBusy()) {
-                        state = PathState.DONE;
+                        setState(PathState.DONE);
                     }
                     break;
 
