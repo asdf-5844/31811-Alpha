@@ -47,14 +47,24 @@ public class BlueClose9 extends LinearOpMode {
     private Intake intake;
     private Transport transport;
 
+    private void startIntaking() {
+        intake.intake(1.0);
+        transport.move(0.7);
+    }
+
+    private void stopIntaking() {
+        intake.stop();
+        transport.stop();
+    }
+
+
     @Override
     public void runOpMode() {
 
         follower = Constants.createFollower(hardwareMap);
         intake = new Intake(hardwareMap);
         transport = new Transport(hardwareMap);
-        intake.stop();
-        transport.stop();
+        stopIntaking();
 
         outtake.init(hardwareMap);
 
@@ -104,6 +114,7 @@ public class BlueClose9 extends LinearOpMode {
 
                 case MOVE1:
                     if (!follower.isBusy()) {
+                        startIntaking();
                         follower.followPath(paths.intake1);
                         setState(PathState.INTAKE1);
                     }
@@ -111,6 +122,7 @@ public class BlueClose9 extends LinearOpMode {
 
                 case INTAKE1:
                     if (!follower.isBusy()) {
+                        stopIntaking();
                         follower.followPath(paths.score1);
                         setState(PathState.DRIVE_TO_SCORE1);
                     }
@@ -136,6 +148,7 @@ public class BlueClose9 extends LinearOpMode {
 
                 case MOVE2:
                     if (!follower.isBusy()) {
+                        startIntaking();
                         follower.followPath(paths.intake2);
                         setState(PathState.INTAKE2);
                     }
@@ -143,6 +156,7 @@ public class BlueClose9 extends LinearOpMode {
 
                 case INTAKE2:
                     if (!follower.isBusy()) {
+                        stopIntaking();
                         follower.followPath(paths.move3);
                         setState(PathState.DRIVE_TO_SCORE2);
                     }
