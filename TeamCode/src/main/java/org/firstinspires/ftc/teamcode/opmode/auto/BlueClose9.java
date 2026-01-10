@@ -75,6 +75,7 @@ public class BlueClose9 extends LinearOpMode {
         outtake.init(hardwareMap);
 
         boolean mirror = false;
+
         // visualizer start pose
         double startX = 21.762;
         double startY = 126.474;
@@ -85,7 +86,7 @@ public class BlueClose9 extends LinearOpMode {
 
         follower.setStartingPose(start);
 
-        paths = new Path9(follower, false);
+        paths = new Path9(follower, mirror);
 
         waitForStart();
 

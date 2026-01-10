@@ -9,10 +9,10 @@ public class AllianceMirror {
         if (!isRed) return p;
         return new Pose(
                 FIELD_SIZE - p.getX(),
-                p.getY()
+                p.getY(),
+                mirrorHeading(p.getHeading(), true)
         );
     }
-
     // Pose in pedro is (x,y)
     // Headings are handled separately by mirroring angles
     public static double mirrorHeading(double headingRad, boolean isRed) {

@@ -19,15 +19,16 @@ public class Path9 {
     public PathChain score2;
     public PathChain park;
 
-    private double SCORE_X = 32.316;
-    private double SCORE_Y = 109.106;
+    private static final double SCORE_X = 32.316;
+    private static final double SCORE_Y = 109.106;
     // mirror true = Red, false = Blue
 
     public Path9(Follower follower, boolean mirror) {
 
+        // heading is not used by BezierLine endpoints
         scorepreload = follower.pathBuilder().addPath(
                 new BezierLine(
-                        AllianceMirror.mirrorPose(new Pose(21.762, 126.474, Math.toRadians(145)), mirror),
+                            AllianceMirror.mirrorPose(new Pose(21.762, 126.474, 0), mirror),
                         AllianceMirror.mirrorPose(new Pose(SCORE_X, SCORE_Y, 0), mirror)
                 )
         ).setConstantHeadingInterpolation(
@@ -55,7 +56,7 @@ public class Path9 {
 
         score1 = follower.pathBuilder().addPath(
                 new BezierLine(
-                        AllianceMirror.mirrorPose(new Pose(15.927, 83.000, 0), mirror),
+                        AllianceMirror.mirrorPose(new Pose(15.927, 84.500, 0), mirror),
                         AllianceMirror.mirrorPose(new Pose(SCORE_X, SCORE_Y, 0), mirror)
                 )
         ).setLinearHeadingInterpolation(
@@ -75,7 +76,7 @@ public class Path9 {
 
         intake2 = follower.pathBuilder().addPath(
                 new BezierLine(
-                        AllianceMirror.mirrorPose(new Pose(48.513, 60.000, 0), mirror),
+                        AllianceMirror.mirrorPose(new Pose(50.500, 60.000, 0), mirror),
                         AllianceMirror.mirrorPose(new Pose(14.649, 60.000, 0), mirror)
                 )
         ).setConstantHeadingInterpolation(
@@ -84,7 +85,7 @@ public class Path9 {
 
         move3 = follower.pathBuilder().addPath(
                 new BezierLine(
-                        AllianceMirror.mirrorPose(new Pose(14.649, 59.000, 0), mirror),
+                        AllianceMirror.mirrorPose(new Pose(14.649, 60.000, 0), mirror),
                         AllianceMirror.mirrorPose(new Pose(28.391, 65.049, 0), mirror)
                 )
         ).setLinearHeadingInterpolation(

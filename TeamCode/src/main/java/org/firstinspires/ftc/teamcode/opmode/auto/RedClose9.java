@@ -76,17 +76,16 @@ public class RedClose9 extends LinearOpMode {
 
         boolean mirror = true; // SINCE IT IS RED
 
-        // visualizer start pose
-        double startX = 67;
-        double startY = 67;
-        double startHeading = Math.toRadians(35);
+        // blue start coordinates
+        double startX = 21.762;
+        double startY = 126.474;
+        double startHeading = Math.toRadians(145);
+        Pose blueStart = new Pose(startX, startY, startHeading);
 
-        Pose redStart = new Pose(startX, startY, startHeading);
-        Pose start = AllianceMirror.mirrorPose(redStart, mirror);
-
+        Pose start = AllianceMirror.mirrorPose(blueStart, mirror);
         follower.setStartingPose(start);
 
-        paths = new Path9(follower, false);
+        paths = new Path9(follower, mirror);
 
         waitForStart();
 
