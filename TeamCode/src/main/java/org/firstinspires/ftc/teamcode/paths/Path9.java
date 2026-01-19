@@ -105,7 +105,7 @@ public class Path9 {
         park = follower.pathBuilder().addPath(
                 new BezierLine(
                         AllianceMirror.mirrorPose(new Pose(SCORE_X, SCORE_Y, 0), mirror),
-                        AllianceMirror.mirrorPose(new Pose(23.788, 63.352, 0), mirror)
+                        AllianceMirror.mirrorPose(new Pose(23.788, 64.352, 0), mirror)
                 )
         ).setLinearHeadingInterpolation(
                 AllianceMirror.mirrorHeading(Math.toRadians(125), mirror),
