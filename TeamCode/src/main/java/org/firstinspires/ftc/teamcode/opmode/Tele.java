@@ -114,17 +114,25 @@ public class Tele extends LinearOpMode {
             if (slowMode) {
                 MaxSpeed = 0.3;
             } else {
-                MaxSpeed = 0.85;
+                MaxSpeed = 0.9;
             }
 
             MecanumDrive(forward, right, rotate, MaxSpeed);
 
             // --- OUTTAKE + TRANSPORT LOGIC ---
 
-            // Emergency Reverse
-            if (gamepad2.left_bumper) {
+            // Reverse intake + transfer for ball jams
+            if (gamepad2.right_bumper) {
+                rgb.setPosition(0.722);   // VIOLET
+
+                // Reverse everything
+                intakePower(-1.0);
+                transportPower(-0.8);
+            }
+            // Emergency Reverse if gate broken
+            else if (gamepad2.left_bumper) {
                 transportPower(-1.0);
-                intakePower(0.7);
+                intakePower(0.8);
             }
             else if (gamepad2.left_trigger > 0.1 && gamepad2.right_trigger > 0.1) {
                 // BOTH TRIGGERS → shoot AND intake
