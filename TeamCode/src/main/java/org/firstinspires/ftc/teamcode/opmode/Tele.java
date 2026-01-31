@@ -126,7 +126,7 @@ public class Tele extends LinearOpMode {
                 rgb.setPosition(0.722);   // VIOLET
 
                 // Reverse everything
-                intakePower(-1.0);
+                intakePower(-0.5);
                 transportPower(-0.8);
             }
             // Emergency Reverse if gate broken
