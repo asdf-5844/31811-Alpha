@@ -23,6 +23,7 @@ public class Tele extends LinearOpMode {
     private CRServo s0, s1, s2, s3, TopServo;
     private Servo GateServo;
     private Servo rgb;
+    private Servo HoodServo;
 
     @Override
     public void runOpMode() {
@@ -50,6 +51,10 @@ public class Tele extends LinearOpMode {
         double GateOpen = 1.0;
         double GateClose = 0.7;
 
+        double hoodPos = 0.5; // start angle (0.0–1.0)
+        double hoodStep = 0.01; // how fast it moves
+
+
         // RGB indicator light
         rgb = hardwareMap.get(Servo.class, "rgb");
 
@@ -60,6 +65,7 @@ public class Tele extends LinearOpMode {
         s3 = hardwareMap.get(CRServo.class, "s3");
         TopServo = hardwareMap.get(CRServo.class, "TopServo");
         GateServo = hardwareMap.get(Servo.class, "GateServo");
+        HoodServo = hardwareMap.get(Servo.class, "Hood");
 
         intakeMotor = hardwareMap.get(DcMotor.class, "m1");
 
@@ -86,10 +92,11 @@ public class Tele extends LinearOpMode {
 
 
         waitForStart();
+        HoodServo.setPosition(hoodPos);
         while (opModeIsActive()) {
+
             // Variables that continuously change
             double forward, right, rotate;
-
 
             forward = -gamepad1.left_stick_y;
             right = gamepad1.left_stick_x;
@@ -103,10 +110,20 @@ public class Tele extends LinearOpMode {
                 xWasPressed = false;  // reset when button released
             }
 
+            // HOOD SERVO CONTROL (gamepad2 dpad)
+            if (gamepad2.dpad_up) {
+                hoodPos += hoodStep;
+            } else if (gamepad2.dpad_down) {
+                hoodPos -= hoodStep;
+            }
+            // clamp to safe range
+            hoodPos = Math.max(0.0, Math.min(1.0, hoodPos));
+            HoodServo.setPosition(hoodPos);
+
             if (gamepad2.a) {
-                flyWheelVelocity = 1200;    // medium shot
+                flyWheelVelocity = 1200;    // medium shot: 1200
             } else if (gamepad2.x) {
-                flyWheelVelocity = 1000;   // close shot
+                flyWheelVelocity = 1000;   // close shot: 1000
             }
 
             // Set MaxSpeed based on mode

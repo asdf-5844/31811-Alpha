@@ -142,7 +142,7 @@ public class BlueClose9Gate extends LinearOpMode {
                     if (!follower.isBusy()) {
                         stopIntaking();
 
-                        // NEW: do the gate-opening motion/path
+                        // gate-opening motion/path
                         follower.setMaxPower(TRAVEL_POWER);
                         follower.followPath(paths.opengate);
                         setState(PathState.OPENGATE);
