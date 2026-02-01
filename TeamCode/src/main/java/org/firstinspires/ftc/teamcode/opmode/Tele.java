@@ -122,7 +122,7 @@ public class Tele extends LinearOpMode {
             // --- OUTTAKE + TRANSPORT LOGIC ---
 
             // Reverse intake + transfer for ball jams
-            if (gamepad2.right_bumper) {
+            if (gamepad2.left_bumper) {
                 rgb.setPosition(0.722);   // VIOLET
 
                 // Reverse everything
@@ -130,7 +130,7 @@ public class Tele extends LinearOpMode {
                 transportPower(-0.8);
             }
             // Emergency Reverse if gate broken
-            else if (gamepad2.left_bumper) {
+            else if (gamepad2.right_bumper) {
                 transportPower(-1.0);
                 intakePower(0.8);
             }
