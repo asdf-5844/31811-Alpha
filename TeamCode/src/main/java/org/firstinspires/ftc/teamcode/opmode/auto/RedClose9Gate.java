@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.subsystem.Intake;
 import org.firstinspires.ftc.teamcode.subsystem.Transport;
 import org.firstinspires.ftc.teamcode.subsystem.Outtake3;
 
-@Autonomous(name = "BlueClose9Gate", group = "Pedro")
-public class BlueClose9Gate extends LinearOpMode {
+@Autonomous(name = "RedClose9Gate", group = "Pedro")
+public class RedClose9Gate extends LinearOpMode {
 
     private Follower follower;
     private Path9Gate paths;
@@ -40,7 +40,7 @@ public class BlueClose9Gate extends LinearOpMode {
     private void setState(PathState newState) {
         state = newState;
         shotsTriggered = false; // allows each LAUNCH state to trigger once
-        if (newState != BlueClose9Gate.PathState.OPENGATE) {
+        if (newState != PathState.OPENGATE) {
             spillTimerStarted = false;
         }
     }
@@ -83,15 +83,15 @@ public class BlueClose9Gate extends LinearOpMode {
 
         outtake.init(hardwareMap);
 
-        boolean mirror = false; // Blue
+        boolean mirror = true; // Red
 
         // start pose
-        double startX = 33.790;
-        double startY = 134.773;
-        double startHeading = Math.toRadians(180);
+        double startX = 146.21;
+        double startY = 45.227;
+        double startHeading = Math.toRadians(0);
 
-        Pose blueStart = new Pose(startX, startY, startHeading);
-        Pose start = AllianceMirror.mirrorPose(blueStart, mirror);
+        Pose redStart = new Pose(startX, startY, startHeading);
+        Pose start = AllianceMirror.mirrorPose(redStart, mirror);
 
         follower.setStartingPose(start);
 
@@ -156,6 +156,7 @@ public class BlueClose9Gate extends LinearOpMode {
                             gateTimer.reset();
                             spillTimerStarted = true;
                         }
+
                         // After 4 seconds, go to score1
                         if (gateTimer.seconds() >= 4.0) {
                             follower.setMaxPower(TRAVEL_POWER);

@@ -114,7 +114,7 @@ public class Tele extends LinearOpMode {
             if (slowMode) {
                 MaxSpeed = 0.3;
             } else {
-                MaxSpeed = 0.9;
+                MaxSpeed = 0.9; // tune
             }
 
             MecanumDrive(forward, right, rotate, MaxSpeed);
@@ -190,6 +190,7 @@ public class Tele extends LinearOpMode {
             telemetry.addData("Turn Power",  "%.2f", rotate);
             telemetry.addLine();
             telemetry.addData("Intake Power",  "%.2f", intakeMotor.getPower());
+            telemetry.addLine();
 
             telemetry.addData("Flywheel Target", "%.0f", flyWheelVelocity);
             telemetry.addData("Flywheel Velocity", "%.0f", outtakeMotor.getVelocity());
