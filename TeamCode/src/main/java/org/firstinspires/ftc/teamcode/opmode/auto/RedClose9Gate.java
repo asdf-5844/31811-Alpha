@@ -85,13 +85,13 @@ public class RedClose9Gate extends LinearOpMode {
 
         boolean mirror = true; // Red
 
-        // start pose
-        double startX = 146.21;
-        double startY = 45.227;
-        double startHeading = Math.toRadians(0);
+        // blue start pose
+        double startX = 33.790;
+        double startY = 134.773;
+        double startHeading = Math.toRadians(180);
 
-        Pose redStart = new Pose(startX, startY, startHeading);
-        Pose start = AllianceMirror.mirrorPose(redStart, mirror);
+        Pose blueStart = new Pose(startX, startY, startHeading);
+        Pose start = AllianceMirror.mirrorPose(blueStart, mirror); // Mirror blue start
 
         follower.setStartingPose(start);
 
