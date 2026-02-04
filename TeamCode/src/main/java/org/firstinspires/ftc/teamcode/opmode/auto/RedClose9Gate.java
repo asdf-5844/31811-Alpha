@@ -158,7 +158,7 @@ public class RedClose9Gate extends LinearOpMode {
                         }
 
                         // After 2 seconds, go to score1
-                        if (gateTimer.seconds() >= 2.0) {
+                        if (gateTimer.seconds() >= 2.5) {
                             follower.setMaxPower(TRAVEL_POWER);
                             follower.followPath(paths.score1);
                             setState(PathState.DRIVE_TO_SCORE1);
