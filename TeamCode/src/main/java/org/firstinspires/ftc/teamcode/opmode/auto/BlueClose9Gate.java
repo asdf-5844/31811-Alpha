@@ -157,7 +157,7 @@ public class BlueClose9Gate extends LinearOpMode {
                             spillTimerStarted = true;
                         }
                         // After 4 seconds, go to score1
-                        if (gateTimer.seconds() >= 4.0) {
+                        if (gateTimer.seconds() >= 2.0) {
                             follower.setMaxPower(TRAVEL_POWER);
                             follower.followPath(paths.score1);
                             setState(PathState.DRIVE_TO_SCORE1);

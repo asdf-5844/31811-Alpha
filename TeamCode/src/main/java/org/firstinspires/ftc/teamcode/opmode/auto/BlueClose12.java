@@ -146,7 +146,7 @@ public class BlueClose12 extends LinearOpMode {
                             spillTimerStarted = true;
                         }
 
-                        if (gateTimer.seconds() >= 4.0) {
+                        if (gateTimer.seconds() >= 2.0) {
                             spillTimerStarted = false;
                             follower.setMaxPower(TRAVEL_POWER);
                             follower.followPath(paths.score1);
