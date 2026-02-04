@@ -77,8 +77,8 @@ public class BlueClose9 extends LinearOpMode {
         boolean mirror = false;
 
         // visualizer start pose
-        double startX = 21.762;
-        double startY = 126.474;
+        double startX = 23.224;
+        double startY = 125.196;
         double startHeading = Math.toRadians(145);
 
         Pose blueStart = new Pose(startX, startY, startHeading);

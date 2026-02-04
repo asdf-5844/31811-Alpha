@@ -86,9 +86,9 @@ public class BlueClose9Gate extends LinearOpMode {
         boolean mirror = false; // Blue
 
         // start pose
-        double startX = 33.790;
-        double startY = 134.773;
-        double startHeading = Math.toRadians(180);
+        double startX = 23.224;
+        double startY = 125.196;
+        double startHeading = Math.toRadians(145);
 
         Pose blueStart = new Pose(startX, startY, startHeading);
         Pose start = AllianceMirror.mirrorPose(blueStart, mirror);
