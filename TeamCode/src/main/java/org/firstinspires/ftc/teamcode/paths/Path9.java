@@ -28,7 +28,7 @@ public class Path9 {
         // heading is not used by BezierLine endpoints
         scorepreload = follower.pathBuilder().addPath(
                 new BezierLine(
-                        AllianceMirror.mirrorPose(new Pose(21.762, 126.474, 0), mirror),
+                        AllianceMirror.mirrorPose(new Pose(23.224, 125.196, 0), mirror),
                         AllianceMirror.mirrorPose(new Pose(SCORE_X, SCORE_Y, 0), mirror)
                 )
         ).setLinearHeadingInterpolation(
@@ -78,7 +78,7 @@ public class Path9 {
         intake2 = follower.pathBuilder().addPath(
                 new BezierLine(
                         AllianceMirror.mirrorPose(new Pose(50.500, 58.500, 0), mirror),
-                        AllianceMirror.mirrorPose(new Pose(12.649, 58.500, 0), mirror)
+                        AllianceMirror.mirrorPose(new Pose(12.650, 58.500, 0), mirror)
                 )
         ).setConstantHeadingInterpolation(
                 AllianceMirror.mirrorHeading(Math.toRadians(180), mirror)
@@ -86,7 +86,7 @@ public class Path9 {
 
         move3 = follower.pathBuilder().addPath(
                 new BezierLine(
-                        AllianceMirror.mirrorPose(new Pose(12.649, 58.500, 0), mirror),
+                        AllianceMirror.mirrorPose(new Pose(12.650, 58.500, 0), mirror),
                         AllianceMirror.mirrorPose(new Pose(34.580, 58.500, 0), mirror)
                 )
         ).setLinearHeadingInterpolation(

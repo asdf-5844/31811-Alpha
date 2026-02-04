@@ -28,21 +28,20 @@ public class Path9Gate {
 
         scorepreload = follower.pathBuilder().addPath(
                 new BezierLine(
-                        AllianceMirror.mirrorPose(new Pose(33.790, 134.773, 0), mirror),
+                        AllianceMirror.mirrorPose(new Pose(23.224, 125.196, 0), mirror),
                         AllianceMirror.mirrorPose(new Pose(SCORE_X, SCORE_Y, 0), mirror)
                 )
-        ).setLinearHeadingInterpolation(
-                AllianceMirror.mirrorHeading(Math.toRadians(180), mirror),
-                AllianceMirror.mirrorHeading(Math.toRadians(135), mirror)
+        ).setConstantHeadingInterpolation(
+                AllianceMirror.mirrorHeading(Math.toRadians(145), mirror)
         ).build();
 
         move1 = follower.pathBuilder().addPath(
                         new BezierLine(
-                                AllianceMirror.mirrorPose(new Pose(32.316, 109.106, 0), mirror),
+                                AllianceMirror.mirrorPose(new Pose(SCORE_X, SCORE_Y, 0), mirror),
                                 AllianceMirror.mirrorPose(new Pose(52.863, 84.250, 0), mirror)
                         )
         ).setLinearHeadingInterpolation(
-                        AllianceMirror.mirrorHeading(Math.toRadians(135), mirror),
+                        AllianceMirror.mirrorHeading(Math.toRadians(145), mirror),
                         AllianceMirror.mirrorHeading(Math.toRadians(180), mirror)
         ).build();
 
@@ -107,7 +106,7 @@ public class Path9Gate {
 
         park = follower.pathBuilder().addPath(
                 new BezierLine(
-                        AllianceMirror.mirrorPose(new Pose(33.361, 111.299, 0), mirror),
+                        AllianceMirror.mirrorPose(new Pose(SCORE_X, SCORE_Y, 0), mirror),
                         AllianceMirror.mirrorPose(new Pose(23.788, 64.352, 0), mirror)
                 )
         ).setLinearHeadingInterpolation(
