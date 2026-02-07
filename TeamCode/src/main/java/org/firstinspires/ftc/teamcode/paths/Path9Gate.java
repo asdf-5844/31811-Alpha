@@ -57,7 +57,7 @@ public class Path9Gate {
         opengate = follower.pathBuilder().addPath(
                 new BezierCurve(
                         AllianceMirror.mirrorPose(new Pose(14.690, 84.250, 0), mirror),
-                        AllianceMirror.mirrorPose(new Pose(35.843, 86.258, 0), mirror),
+                        AllianceMirror.mirrorPose(new Pose(44.919, 84.896, 0), mirror),
                         AllianceMirror.mirrorPose(new Pose(16.962, 75.546, 0), mirror)
                 )
         ).setConstantHeadingInterpolation(
