@@ -124,9 +124,9 @@ public class Tele extends LinearOpMode {
             // Set MaxSpeed based on mode
             double MaxSpeed;
             if (slowMode) {
-                MaxSpeed = 0.3;
+                MaxSpeed = 0.5;
             } else {
-                MaxSpeed = 0.9; // tune
+                MaxSpeed = 1.00; // tune
             }
 
             MecanumDrive(forward, right, rotate, MaxSpeed);

@@ -96,7 +96,7 @@ public class Path9Gate {
         score2 = follower.pathBuilder().addPath(
                 new BezierCurve(
                         AllianceMirror.mirrorPose(new Pose(12.650, 58.500, 0), mirror),
-                        AllianceMirror.mirrorPose(new Pose(52.552, 54.891, 0), mirror),
+                        AllianceMirror.mirrorPose(new Pose(72.540, 53.171, 0), mirror),
                         AllianceMirror.mirrorPose(new Pose(SCORE_X, SCORE_Y, 0), mirror)
                 )
         ).setLinearHeadingInterpolation(
@@ -107,7 +107,7 @@ public class Path9Gate {
         park = follower.pathBuilder().addPath(
                 new BezierLine(
                         AllianceMirror.mirrorPose(new Pose(SCORE_X, SCORE_Y, 0), mirror),
-                        AllianceMirror.mirrorPose(new Pose(23.788, 64.352, 0), mirror)
+                        AllianceMirror.mirrorPose(new Pose(25.788, 64.652, 0), mirror)
                 )
         ).setLinearHeadingInterpolation(
                 AllianceMirror.mirrorHeading(Math.toRadians(125), mirror),
