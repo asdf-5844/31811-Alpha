@@ -50,6 +50,8 @@ public class BlueClose9Gate extends LinearOpMode {
     // Speeds
     private static final double TRAVEL_POWER = 0.80;  // normal driving
     private static final double INTAKE_POWER = 0.45;  // slow for picking up balls
+    private static final double GATE_POWER = 0.70;  // gate power
+
 
     // Flywheel / Intake
     private final Outtake3 outtake = new Outtake3();
@@ -143,7 +145,7 @@ public class BlueClose9Gate extends LinearOpMode {
                         stopIntaking();
 
                         // gate-opening motion/path
-                        follower.setMaxPower(TRAVEL_POWER);
+                        follower.setMaxPower(GATE_POWER);
                         follower.followPath(paths.opengate);
                         setState(PathState.OPENGATE);
                     }
