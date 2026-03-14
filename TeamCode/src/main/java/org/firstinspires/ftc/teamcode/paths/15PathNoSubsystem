@@ -1,17 +1,15 @@
 public static class Paths {
     public PathChain Path1, Path2, Path3, Path4, Path5, Path6, Path7, Path9, Path10, Path11, Path12, Path13, Path14;
 
-    // Helper to flip the Y coordinate if we are on the Red Alliance
+
     public Pose mirrorPose(Pose pose, boolean isRed) {
         if (isRed) {
-            // Flips the Y-axis across the center (72"). 
-            // Also flips the heading so 90 degrees becomes -90.
             return new Pose(pose.getX(), 144 - pose.getY(), -pose.getHeading());
         }
         return pose;
     }
 
-    // Helper to flip just the angle for your interpolations
+
     public double mirrorHeading(double radians, boolean isRed) {
         return isRed ? -radians : radians;
     }
