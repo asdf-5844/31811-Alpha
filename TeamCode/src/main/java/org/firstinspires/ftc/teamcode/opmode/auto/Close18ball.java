@@ -40,29 +40,105 @@ public class DecodeAuto extends OpMode {
         follower.update();
 
         // state machine 
+        // The State Machine - Runs through Path1 to Path14
         switch (pathState) {
-            case 0: // path 1 start
+            case 0: // Start Path 1
                 follower.followPath(myPaths.Path1);
                 pathState = 1;
                 break;
 
-            case 1: 
+            case 1: // Wait for Path 1, then start Path 2
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path2);
+                    follower.followPath(myPaths.Path14); // Note: Following your Path14 order
                     pathState = 2;
                 }
                 break;
 
-            case 2: 
+            case 2:
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path3);
+                    follower.followPath(myPaths.Path2);
                     pathState = 3;
                 }
                 break;
-            
+
+            case 3:
+                if (!follower.isBusy()) {
+                    follower.followPath(myPaths.Path3);
+                    pathState = 4;
+                }
+                break;
+
+            case 4:
+                if (!follower.isBusy()) {
+                    follower.followPath(myPaths.Path4);
+                    pathState = 5;
+                }
+                break;
+
+            case 5:
+                if (!follower.isBusy()) {
+                    follower.followPath(myPaths.Path5);
+                    pathState = 6;
+                }
+                break;
+
+            case 6:
+                if (!follower.isBusy()) {
+                    follower.followPath(myPaths.Path6);
+                    pathState = 7;
+                }
+                break;
+
+            case 7:
+                if (!follower.isBusy()) {
+                    follower.followPath(myPaths.Path7);
+                    pathState = 8;
+                }
+                break;
+
+            case 8: // Skipping Path 8 as it was missing in your original snippet
+                follower.followPath(myPaths.Path9);
+                pathState = 9;
+                break;
+
+            case 9:
+                if (!follower.isBusy()) {
+                    follower.followPath(myPaths.Path10);
+                    pathState = 10;
+                }
+                break;
+
+            case 10:
+                if (!follower.isBusy()) {
+                    follower.followPath(myPaths.Path11);
+                    pathState = 11;
+                }
+                break;
+
+            case 11:
+                if (!follower.isBusy()) {
+                    follower.followPath(myPaths.Path12);
+                    pathState = 12;
+                }
+                break;
+
+            case 12:
+                if (!follower.isBusy()) {
+                    follower.followPath(myPaths.Path13);
+                    pathState = 13;
+                }
+                break;
+
+            case 13:
+                if (!follower.isBusy()) {
+                    follower.followPath(myPaths.Path14); // Final Path14
+                    pathState = 14;
+                }
+                break;
+
             case 14:
-                 if (!follower.isBusy()) {
-                    // Robot has finished all paths
+                if (!follower.isBusy()) {
+                    // All paths complete!
                     pathState = -1; 
                 }
                 break;
