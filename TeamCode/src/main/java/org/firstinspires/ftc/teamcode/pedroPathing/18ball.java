@@ -1,0 +1,76 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.PathChain;
+
+public class Paths {
+    public PathChain Path1, Path2, Path3, Path4, Path5, Path6, Path7, Path9, Path10, Path11, Path12, Path13, Path14;
+
+    // Helper to flip the Y coordinate for Symmetrical mirroring in DECODE 2026
+    public Pose mirrorPose(Pose pose, boolean isRed) {
+        if (isRed) {
+            // Flips Y across the 72" center line (144 - Y)
+            // Negates the heading so the robot rotates the opposite way on Red
+            return new Pose(pose.getX(), 144 - pose.getY(), -pose.getHeading());
+        }
+        return pose;
+    }
+
+    // Helper to flip the heading for interpolations
+    public double mirrorHeading(double radians, boolean isRed) {
+        return isRed ? -radians : radians;
+    }
+
+    public Paths(Follower follower, boolean isRed) {
+        
+        // Path 1: Start to First Position
+        Path1 = follower.pathBuilder()
+            .addPath(new BezierLine(
+                mirrorPose(new Pose(27.149, 134.762, Math.toRadians(142)), isRed),
+                mirrorPose(new Pose(46.983, 118.210, Math.toRadians(133)), isRed)
+            ))
+            .setLinearHeadingInterpolation(mirrorHeading(Math.toRadians(142), isRed), mirrorHeading(Math.toRadians(133), isRed))
+            .build();
+
+        // Path 2: Transition
+        Path2 = follower.pathBuilder()
+            .addPath(new BezierLine(
+                mirrorPose(new Pose(46.983, 118.210, Math.toRadians(133)), isRed),
+                mirrorPose(new Pose(52.202, 60.494, Math.toRadians(180)), isRed)
+            ))
+            .setLinearHeadingInterpolation(mirrorHeading(Math.toRadians(133), isRed), mirrorHeading(Math.toRadians(180), isRed))
+            .build();
+
+        // Path 3: Moving to Intake
+        Path3 = follower.pathBuilder()
+            .addPath(new BezierLine(
+                mirrorPose(new Pose(52.202, 60.494, Math.toRadians(180)), isRed),
+                mirrorPose(new Pose(20.028, 60.326, Math.toRadians(180)), isRed)
+            ))
+            .setTangentHeadingInterpolation()
+            .build();
+
+        // Path 4: Scoring (Reversed)
+        Path4 = follower.pathBuilder()
+            .addPath(new BezierLine(
+                mirrorPose(new Pose(20.028, 60.326, Math.toRadians(180)), isRed),
+                mirrorPose(new Pose(71.873, 71.834, Math.toRadians(133)), isRed)
+            ))
+            .setLinearHeadingInterpolation(mirrorHeading(Math.toRadians(180), isRed), mirrorHeading(Math.toRadians(133), isRed))
+            .setReversed(true)
+            .build();
+
+        // ... [Repeat this pattern for Paths 5 through 14] ...
+        // Note: Use the 'mirrorPose' and 'mirrorHeading' on every new Pose and Interpolation call.
+        
+        Path14 = follower.pathBuilder()
+            .addPath(new BezierLine(
+                mirrorPose(new Pose(38.514, 103.923, Math.toRadians(133)), isRed),
+                mirrorPose(new Pose(26.210, 93.044, Math.toRadians(133)), isRed)
+            ))
+            .setLinearHeadingInterpolation(mirrorHeading(Math.toRadians(133), isRed), mirrorHeading(Math.toRadians(133), isRed))
+            .build();
+    }
+}
