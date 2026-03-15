@@ -8,7 +8,7 @@ import com.pedropathing.pathgen.PathChain;
 public class Paths {
     public PathChain Path1, Path2, Path3, Path4, Path5, Path6, Path7, Path9, Path10, Path11, Path12, Path13, Path14;
 
-    // Helper to flip the Y coordinate for Symmetrical mirroring in DECODE 2026
+    // made mrrior pose so that red and blue alliance works
     public Pose mirrorPose(Pose pose, boolean isRed) {
         if (isRed) {
 
