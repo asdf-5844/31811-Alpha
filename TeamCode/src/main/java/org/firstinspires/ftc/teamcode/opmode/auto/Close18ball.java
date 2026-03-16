@@ -5,150 +5,158 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.util.Timer;
 import com.pedropathing.localization.Pose;
-
-// These imports link to your other files in the pedroPathing folder
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.pedroPathing.Close18ball; 
+import org.firstinspires.ftc.teamcode.pedroPathing.Close18Ball;
 
 @Autonomous(name = "Decode 18 Ball Auto", group = "Autonomous")
 public class DecodeAuto extends OpMode {
     private Follower follower;
-    private Timer pathTimer;
-    private int pathState;
     private Paths myPaths;
-
-    // Set this to true if on Red Alliance, false for Blue Alliance
-    private boolean isRed = false; 
+    private Timer pathTimer;
+    private int pathState = 0;
 
     @Override
     public void init() {
+        follower = new Follower(hardwareMap);
+        myPaths = new Paths(follower);
         pathTimer = new Timer();
         
-
-        follower = Constants.createFollower(hardwareMap);
-        
-
-        myPaths = new Paths(follower, isRed);
-        
-    
-        follower.setStartingPose(myPaths.Path1.getPath(0).getPoint(0));
+        // Path 1 start coordinates
+        follower.setStartingPose(new Pose(27.149, 134.762, Math.toRadians(142)));
     }
 
     @Override
     public void loop() {
-        // update robot position
         follower.update();
 
-        // state machine 
-        // The State Machine - Runs through Path1 to Path14
         switch (pathState) {
             case 0: // Start Path 1
                 follower.followPath(myPaths.Path1);
                 pathState = 1;
                 break;
 
-            case 1: // Wait for Path 1, then start Path 2
+            case 1: // Wait 1500ms after Path 1
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path14); // Note: Following your Path14 order
-                    pathState = 2;
-                }
+                    if (pathTimer.getElapsedTimeMS() > 1500) {
+                        follower.followPath(myPaths.Path2);
+                        pathState = 2;
+                        pathTimer.resetTimer();
+                    }
+                } else { pathTimer.resetTimer(); }
                 break;
 
-            case 2:
+            case 2: // Path 2 (No wait)
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path2);
+                    follower.followPath(myPaths.Path3);
                     pathState = 3;
                 }
                 break;
 
-            case 3:
+            case 3: // Path 3 (No wait)
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path3);
+                    follower.followPath(myPaths.Path4);
                     pathState = 4;
                 }
                 break;
 
-            case 4:
+            case 4: // Wait 1500ms after Path 4
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path4);
-                    pathState = 5;
-                }
+                    if (pathTimer.getElapsedTimeMS() > 1500) {
+                        follower.followPath(myPaths.Path5);
+                        pathState = 5;
+                        pathTimer.resetTimer();
+                    }
+                } else { pathTimer.resetTimer(); }
                 break;
 
-            case 5:
+            case 5: // Path 5 (No wait)
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path5);
+                    follower.followPath(myPaths.Path6);
                     pathState = 6;
                 }
                 break;
 
-            case 6:
+            case 6: // Path 6 (No wait)
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path6);
+                    follower.followPath(myPaths.Path7);
                     pathState = 7;
                 }
                 break;
 
-            case 7:
+            case 7: // Wait 1500ms after Path 7
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path7);
-                    pathState = 8;
-                }
+                    if (pathTimer.getElapsedTimeMS() > 1500) {
+                        follower.followPath(myPaths.Path8);
+                        pathState = 8;
+                        pathTimer.resetTimer();
+                    }
+                } else { pathTimer.resetTimer(); }
                 break;
 
-            case 8: // Skipping Path 8 as it was missing in your original snippet
-                follower.followPath(myPaths.Path9);
-                pathState = 9;
-                break;
-
-            case 9:
+            case 8: // Wait 1500ms after Path 8
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path10);
-                    pathState = 10;
-                }
+                    if (pathTimer.getElapsedTimeMS() > 1500) {
+                        follower.followPath(myPaths.Path9);
+                        pathState = 9;
+                        pathTimer.resetTimer();
+                    }
+                } else { pathTimer.resetTimer(); }
                 break;
 
-            case 10:
+            case 9: // Wait 1500ms after Path 9
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path11);
-                    pathState = 11;
-                }
+                    if (pathTimer.getElapsedTimeMS() > 1500) {
+                        follower.followPath(myPaths.Path10);
+                        pathState = 10;
+                        pathTimer.resetTimer();
+                    }
+                } else { pathTimer.resetTimer(); }
                 break;
 
-            case 11:
+            case 10: // Wait 1500ms after Path 10
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path12);
-                    pathState = 12;
-                }
+                    if (pathTimer.getElapsedTimeMS() > 1500) {
+                        follower.followPath(myPaths.Path11);
+                        pathState = 11;
+                        pathTimer.resetTimer();
+                    }
+                } else { pathTimer.resetTimer(); }
                 break;
 
-            case 12:
+            case 11: // Wait 1500ms after Path 11
+                if (!follower.isBusy()) {
+                    if (pathTimer.getElapsedTimeMS() > 1500) {
+                        follower.followPath(myPaths.Path12);
+                        pathState = 12;
+                        pathTimer.resetTimer();
+                    }
+                } else { pathTimer.resetTimer(); }
+                break;
+
+            case 12: // Path 12 (No wait)
                 if (!follower.isBusy()) {
                     follower.followPath(myPaths.Path13);
                     pathState = 13;
                 }
                 break;
 
-            case 13:
+            case 13: // Wait 1500ms after Path 13
                 if (!follower.isBusy()) {
-                    follower.followPath(myPaths.Path14); // Final Path14
-                    pathState = 14;
-                }
+                    if (pathTimer.getElapsedTimeMS() > 1500) {
+                        follower.followPath(myPaths.Path14);
+                        pathState = 14;
+                        pathTimer.resetTimer();
+                    }
+                } else { pathTimer.resetTimer(); }
                 break;
 
-            case 14:
+            case 14: // Final Path
                 if (!follower.isBusy()) {
-                    // All paths complete!
-                    pathState = -1; 
+                    pathState = -1; // Done!
                 }
                 break;
         }
 
-        // dubugging using telemetry
-        telemetry.addData("Current Path State", pathState);
-        telemetry.addData("Is Busy", follower.isBusy());
-        telemetry.addData("X Position", follower.getPose().getX());
-        telemetry.addData("Y Position", follower.getPose().getY());
+        telemetry.addData("Current State", pathState);
         telemetry.update();
     }
 }
