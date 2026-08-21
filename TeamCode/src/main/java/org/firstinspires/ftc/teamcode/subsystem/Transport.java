@@ -17,10 +17,7 @@ public class Transport {
         topServo = hardwareMap.get(CRServo.class, "TopServo");
     }
 
-    /**
-     * Powers the transport servos to move balls up.
-     * Positive power moves balls forward (upwards), negative reverses.
-     */
+
     public void move(double power) {
         s0.setPower(power);
         s1.setPower(power);
@@ -29,9 +26,6 @@ public class Transport {
         topServo.setPower(power);
     }
 
-    /**
-     * Stops the transport.
-     */
     public void stop() {
         s0.setPower(0);
         s1.setPower(0);

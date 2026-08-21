@@ -13,7 +13,6 @@ import java.util.List;
 public class AutoAimOpMode extends LinearOpMode {
 
     // Adjust Kp to change how fast the robot turns.
-    // Start small (0.01 - 0.03) to avoid violent shaking.
     final double Kp = 0.025;
 
     // Hardware members
@@ -23,20 +22,16 @@ public class AutoAimOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        // 1. Initialize Drive Motors
         leftFront  = hardwareMap.get(DcMotor.class, "leftFront");
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
         leftBack   = hardwareMap.get(DcMotor.class, "leftBack");
         rightBack  = hardwareMap.get(DcMotor.class, "rightBack");
 
-        // Reverse the right side so power 1.0 moves both sides forward
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
 
-        // 2. Initialize AprilTag Processor
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
 
-        // 3. Initialize Vision Portal (Fixes the previous line 32 error)
         visionPortal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"),
                 aprilTag);
@@ -50,7 +45,6 @@ public class AutoAimOpMode extends LinearOpMode {
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             AprilTagDetection targetTag = null;
 
-            // Search for a specific Tag ID (e.g., ID 7 for a goal)
             for (AprilTagDetection detection : currentDetections) {
                 if (detection.metadata != null) {
                     targetTag = detection;
@@ -59,13 +53,10 @@ public class AutoAimOpMode extends LinearOpMode {
             }
 
             if (targetTag != null) {
-                // 'bearing' is the angle error to the tag (left/right)
                 double error = targetTag.ftcPose.bearing;
 
-                // Calculate turning power based on error
                 double turnPower = error * Kp;
 
-                // Rotate the robot to center the tag
                 moveRobot(0, 0, turnPower);
 
                 telemetry.addData("Target", "ID %d", targetTag.id);
@@ -79,7 +70,6 @@ public class AutoAimOpMode extends LinearOpMode {
             telemetry.update();
         }
 
-        // Clean up vision resources
         visionPortal.close();
     }
 

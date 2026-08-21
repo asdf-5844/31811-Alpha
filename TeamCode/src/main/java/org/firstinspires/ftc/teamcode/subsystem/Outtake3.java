@@ -109,7 +109,7 @@ public class Outtake3 {
     }
 
 
-    /** Start a launch of N balls. Only works if currently idle. */
+    // Start a launch of N balls. Only works if currently idle.
     public void startLaunch(int balls) {
         if (state != ShootState.IDLE) return;
         if (balls <= 0) return;

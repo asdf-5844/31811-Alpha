@@ -131,8 +131,6 @@ public class Tele extends LinearOpMode {
 
             MecanumDrive(forward, right, rotate, MaxSpeed);
 
-            // --- OUTTAKE + TRANSPORT LOGIC ---
-
             // Reverse intake + transfer for ball jams
             if (gamepad2.left_bumper) {
                 rgb.setPosition(0.722);   // VIOLET
@@ -196,7 +194,7 @@ public class Tele extends LinearOpMode {
                 GateServo.setPosition(GateClose);
             }
 
-            // Send telemetry messages to explain controls and show robot status
+            // Send telemetry messages
             telemetry.addData("Drive Power", "%.2f", forward);
             telemetry.addData("Strafe Power", "%.2f", right);
             telemetry.addData("Turn Power",  "%.2f", rotate);
@@ -236,7 +234,6 @@ public class Tele extends LinearOpMode {
 
 
     public void intakePower(double mPower) {
-        // you previously inverted this; keep that if intake motor is reversed on robot
         intakeMotor.setPower(-mPower);
     }
 
